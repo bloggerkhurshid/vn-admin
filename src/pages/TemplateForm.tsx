@@ -344,6 +344,17 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
+              {loading && thumbnailFile && (
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-medium text-slate-400">
+                    <span>Uploading Thumbnail</span>
+                    <span className="text-indigo-400 font-mono">{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                    <div className="bg-indigo-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Video Preview Upload */}
@@ -373,6 +384,17 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
+              {loading && videoFile && (
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-medium text-slate-400">
+                    <span>Uploading Video</span>
+                    <span className="text-indigo-400 font-mono">{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                    <div className="bg-purple-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* QR Code Upload */}
@@ -399,6 +421,17 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
+              {loading && qrFile && (
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[11px] font-medium text-slate-400">
+                    <span>Uploading QR Code</span>
+                    <span className="text-indigo-400 font-mono">{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                    <div className="bg-pink-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
