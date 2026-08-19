@@ -166,8 +166,47 @@ export const TemplatesList: React.FC = () => {
       formData.append('is_featured', formIsFeatured ? '1' : '0');
       formData.append('is_premium', formIsPremium ? '1' : '0');
 
+      // Utility: compress and convert images to WEBP/JPEG blob to save bandwidth
+      const compressImage = (file: File, maxDimension = 1200): Promise<File> => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = URL.createObjectURL(file);
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+              (blob) => {
+                if (blob) {
+                  const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", { type: 'image/webp' });
+                  resolve(compressedFile);
+                } else {
+                  resolve(file);
+                }
+              },
+              'image/webp',
+              0.82
+            );
+          };
+          img.onerror = () => resolve(file);
+        });
+      };
+
       if (thumbnailFile) {
-        formData.append('thumbnail', thumbnailFile);
+        const compressedThumb = await compressImage(thumbnailFile, 1000);
+        formData.append('thumbnail', compressedThumb);
       } else if (thumbnailPreview && !thumbnailPreview.startsWith('blob:')) {
         formData.append('thumbnail', thumbnailPreview);
       }
@@ -179,7 +218,8 @@ export const TemplatesList: React.FC = () => {
       }
 
       if (qrFile) {
-        formData.append('template_qr', qrFile);
+        const compressedQr = await compressImage(qrFile, 800);
+        formData.append('template_qr', compressedQr);
       } else if (qrPreview && !qrPreview.startsWith('blob:')) {
         formData.append('template_qr', qrPreview);
       }
