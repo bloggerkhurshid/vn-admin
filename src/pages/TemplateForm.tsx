@@ -344,10 +344,10 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
-              {loading && (thumbnailFile || thumbnailPreview) && (
+              {loading && thumbnailFile && (
                 <div className="space-y-1 mt-2">
                   <div className="flex justify-between text-[11px] font-medium text-slate-400">
-                    <span>Uploading Thumbnail</span>
+                    <span>Uploading Thumbnail File ({Math.round((thumbnailFile.size / 1024).toFixed(0) as any)} KB)</span>
                     <span className="text-indigo-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
                   <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
@@ -384,10 +384,10 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
-              {loading && (videoFile || videoPreview) && (
+              {loading && videoFile && (
                 <div className="space-y-1 mt-2">
                   <div className="flex justify-between text-[11px] font-medium text-slate-400">
-                    <span>Uploading Video</span>
+                    <span>Uploading Video File ({Math.round((videoFile.size / (1024 * 1024)).toFixed(1) as any)} MB)</span>
                     <span className="text-purple-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
                   <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
@@ -421,10 +421,10 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
-              {loading && (qrFile || qrPreview) && (
+              {loading && qrFile && (
                 <div className="space-y-1 mt-2">
                   <div className="flex justify-between text-[11px] font-medium text-slate-400">
-                    <span>Uploading QR Code</span>
+                    <span>Uploading QR Image ({Math.round((qrFile.size / 1024).toFixed(0) as any)} KB)</span>
                     <span className="text-pink-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
                   <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
