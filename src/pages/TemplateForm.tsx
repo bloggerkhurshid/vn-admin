@@ -29,6 +29,7 @@ export const TemplateForm: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   useEffect(() => {
@@ -108,6 +109,7 @@ export const TemplateForm: React.FC = () => {
     }
 
     setLoading(true);
+    setUploadProgress(0);
 
     try {
       const formData = new FormData();
@@ -123,15 +125,21 @@ export const TemplateForm: React.FC = () => {
       if (videoFile) formData.append('video_preview', videoFile);
       if (qrFile) formData.append('template_qr', qrFile);
 
+      const config = {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (progressEvent: any) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(percentCompleted);
+          }
+        },
+      };
+
       if (isEdit) {
-        await api.put(`/admin/templates/${id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        await api.put(`/admin/templates/${id}`, formData, config);
         addToast('success', 'Template updated successfully');
       } else {
-        await api.post('/admin/templates', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        await api.post('/admin/templates', formData, config);
         addToast('success', 'Template uploaded successfully');
       }
 
@@ -140,6 +148,7 @@ export const TemplateForm: React.FC = () => {
       addToast('error', err.response?.data?.message || 'Failed to save template');
     } finally {
       setLoading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -394,6 +403,25 @@ export const TemplateForm: React.FC = () => {
           </div>
         </div>
 
+        {/* Upload Progress Bar */}
+        {loading && (
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span className="text-slate-300 flex items-center gap-2">
+                <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-ping" />
+                <span>Uploading Template Media Files...</span>
+              </span>
+              <span className="text-indigo-400 font-mono text-sm">{uploadProgress}%</span>
+            </div>
+            <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800 p-0.5">
+              <div
+                className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-300 ease-out shadow-sm shadow-indigo-500/50"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Submit Actions */}
         <div className="flex items-center justify-end gap-4">
           <Link
@@ -408,7 +436,10 @@ export const TemplateForm: React.FC = () => {
             className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition-all disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Uploading ({uploadProgress}%)</span>
+              </div>
             ) : (
               <>
                 <Save className="w-4 h-4" />
