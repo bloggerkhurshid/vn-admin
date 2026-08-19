@@ -206,9 +206,9 @@ export const TemplatesList: React.FC = () => {
       fetchTemplates();
     } catch (err: any) {
       const serverErrors = err.response?.data?.errors;
-      let errorMsg = err.response?.data?.message || 'Failed to save template';
+      let errorMsg = err.response?.data?.message || err.message || 'Failed to save template';
       if (serverErrors && typeof serverErrors === 'object') {
-        const details = Object.values(serverErrors).filter(Boolean).join(' ');
+        const details = Object.values(serverErrors).map(v => typeof v === 'object' ? JSON.stringify(v) : v).filter(Boolean).join(' ');
         if (details) errorMsg = details;
       }
       addToast('error', errorMsg);
