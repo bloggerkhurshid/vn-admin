@@ -344,13 +344,13 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
-              {loading && thumbnailFile && (
-                <div className="space-y-1">
+              {loading && (thumbnailFile || thumbnailPreview) && (
+                <div className="space-y-1 mt-2">
                   <div className="flex justify-between text-[11px] font-medium text-slate-400">
                     <span>Uploading Thumbnail</span>
-                    <span className="text-indigo-400 font-mono">{uploadProgress}%</span>
+                    <span className="text-indigo-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
                     <div className="bg-indigo-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                   </div>
                 </div>
@@ -384,13 +384,13 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
-              {loading && videoFile && (
-                <div className="space-y-1">
+              {loading && (videoFile || videoPreview) && (
+                <div className="space-y-1 mt-2">
                   <div className="flex justify-between text-[11px] font-medium text-slate-400">
                     <span>Uploading Video</span>
-                    <span className="text-indigo-400 font-mono">{uploadProgress}%</span>
+                    <span className="text-purple-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
                     <div className="bg-purple-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                   </div>
                 </div>
@@ -421,13 +421,13 @@ export const TemplateForm: React.FC = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                 />
               </div>
-              {loading && qrFile && (
-                <div className="space-y-1">
+              {loading && (qrFile || qrPreview) && (
+                <div className="space-y-1 mt-2">
                   <div className="flex justify-between text-[11px] font-medium text-slate-400">
                     <span>Uploading QR Code</span>
-                    <span className="text-indigo-400 font-mono">{uploadProgress}%</span>
+                    <span className="text-pink-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
                     <div className="bg-pink-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                   </div>
                 </div>
