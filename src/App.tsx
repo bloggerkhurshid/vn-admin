@@ -16,9 +16,12 @@ import { Profile } from './pages/Profile';
 import { AppSettings } from './pages/AppSettings';
 import { CategoriesPage } from './pages/CategoriesPage';
 
+import { ThemeProvider } from './context/ThemeContext';
+
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           {/* Public Auth Routes */}
@@ -49,6 +52,7 @@ export const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </ThemeProvider>
   );
 };
 
