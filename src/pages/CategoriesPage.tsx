@@ -34,8 +34,8 @@ export const CategoriesPage: React.FC = () => {
       if (res.data.success) {
         setCategories(res.data.data);
       }
-    } catch (err) {
-      addToast('error', 'Failed to load categories.');
+    } catch (err: any) {
+      addToast('error', err.response?.data?.message || 'Failed to load categories.');
     } finally {
       setLoading(false);
     }
