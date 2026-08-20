@@ -20,6 +20,7 @@ export const AppSettings: React.FC = () => {
   const [admobBannerId, setAdmobBannerId] = useState('');
   const [admobInterstitialId, setAdmobInterstitialId] = useState('');
   const [admobNativeId, setAdmobNativeId] = useState('');
+  const [admobAppOpenId, setAdmobAppOpenId] = useState('');
   const [vnPackageName, setVnPackageName] = useState('com.frontrow.vlog');
   const [privacyPolicyUrl, setPrivacyPolicyUrl] = useState('');
   const [termsUrl, setTermsUrl] = useState('');
@@ -48,6 +49,7 @@ export const AppSettings: React.FC = () => {
         setAdmobBannerId(cfg.admob_banner_id);
         setAdmobInterstitialId(cfg.admob_interstitial_id);
         setAdmobNativeId(cfg.admob_native_id);
+        setAdmobAppOpenId(cfg.admob_app_open_id || '');
         setVnPackageName(cfg.vn_package_name);
         setPrivacyPolicyUrl(cfg.privacy_policy_url);
         setTermsUrl(cfg.terms_url);
@@ -77,6 +79,7 @@ export const AppSettings: React.FC = () => {
         admob_banner_id: admobBannerId,
         admob_interstitial_id: admobInterstitialId,
         admob_native_id: admobNativeId,
+        admob_app_open_id: admobAppOpenId,
         vn_package_name: vnPackageName,
         privacy_policy_url: privacyPolicyUrl,
         terms_url: termsUrl,
@@ -175,7 +178,7 @@ export const AppSettings: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                 AdMob Native Unit ID
               </label>
               <input
@@ -183,7 +186,20 @@ export const AppSettings: React.FC = () => {
                 value={admobNativeId}
                 onChange={(e) => setAdmobNativeId(e.target.value)}
                 placeholder="ca-app-pub-3940256099942544/2247696110"
-                className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white"
+                className="w-full bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-900 dark:focus:border-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                AdMob App Open Unit ID
+              </label>
+              <input
+                type="text"
+                value={admobAppOpenId}
+                onChange={(e) => setAdmobAppOpenId(e.target.value)}
+                placeholder="ca-app-pub-3940256099942544/9257395921"
+                className="w-full bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-900 dark:focus:border-white"
               />
             </div>
           </div>
