@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import QRCode from 'qrcode';
 import { api } from '../api/axios';
 import { TemplateItem } from '../types';
 import { Plus, Search, Eye, Bookmark, Edit, Trash2, Video, QrCode, ExternalLink, X, Save, Image as ImageIcon, Check } from 'lucide-react';
@@ -554,10 +555,30 @@ export const TemplatesList: React.FC = () => {
                 <input
                   type="text"
                   value={formVnLink}
-                  onChange={(e) => setFormVnLink(e.target.value)}
+                  onChange={async (e) => {
+                    const val = e.target.value;
+                    setFormVnLink(val);
+                    if (val.trim()) {
+                      try {
+                        const qrDataUrl = await QRCode.toDataURL(val.trim(), { width: 600, margin: 2 });
+                        setQrPreview(qrDataUrl);
+                        // Convert Data URL to File object for form submission
+                        const blob = await (await fetch(qrDataUrl)).blob();
+                        const generatedFile = new File([blob], `qr_${Date.now()}.webp`, { type: 'image/webp' });
+                        setQrFile(generatedFile);
+                      } catch (err) {
+                        console.error('QR generation failed', err);
+                      }
+                    }
+                  }}
                   placeholder="e.g. 926992 or intent://template?id=926992#Intent..."
                   className="w-full bg-black border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
                 />
+                {qrPreview && (
+                  <p className="text-[11px] text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
+                    <Check className="w-3.5 h-3.5" /> Auto-generated QR image from Template ID!
+                  </p>
+                )}
               </div>
 
               <div>
