@@ -42,9 +42,23 @@ export const TemplatesList: React.FC = () => {
   const [submittingForm, setSubmittingForm] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
+  const [categoriesList, setCategoriesList] = useState<{ id: number; name: string }[]>([]);
+
   useEffect(() => {
+    fetchCategories();
     fetchTemplates();
   }, [statusFilter, categoryFilter]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get('/admin/categories');
+      if (res.data.success) {
+        setCategoriesList(res.data.data || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories', err);
+    }
+  };
 
   const fetchTemplates = async () => {
     setLoading(true);
@@ -332,11 +346,11 @@ export const TemplatesList: React.FC = () => {
             className="bg-black border border-zinc-800 text-zinc-300 text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-white"
           >
             <option value="">All Categories</option>
-            <option value="Travel">Travel</option>
-            <option value="Vlog">Vlog</option>
-            <option value="Aesthetic">Aesthetic</option>
-            <option value="Reels">Reels</option>
-            <option value="Beat Sync">Beat Sync</option>
+            {categoriesList.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
           </select>
 
           <button
@@ -537,13 +551,15 @@ export const TemplatesList: React.FC = () => {
                     onChange={(e) => setFormCategory(e.target.value)}
                     className="w-full bg-black border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-white transition-colors"
                   >
-                    <option value="Travel">Travel</option>
-                    <option value="Vlog">Vlog</option>
-                    <option value="Aesthetic">Aesthetic</option>
-                    <option value="Reels">Reels</option>
-                    <option value="Beat Sync">Beat Sync</option>
-                    <option value="Cinematic">Cinematic</option>
-                    <option value="General">General</option>
+                    {categoriesList.length === 0 ? (
+                      <option value="General">General</option>
+                    ) : (
+                      categoriesList.map((cat) => (
+                        <option key={cat.id} value={cat.name}>
+                          {cat.name}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
               </div>
