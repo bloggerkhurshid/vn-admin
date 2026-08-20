@@ -5,8 +5,7 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #000000;
-    color: #f4f4f5;
+    @apply bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-100 transition-colors;
   }
 }
 

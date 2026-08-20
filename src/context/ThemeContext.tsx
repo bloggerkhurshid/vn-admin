@@ -19,11 +19,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('admin_theme', theme);
     const root = document.documentElement;
     if (theme === 'light') {
-      root.classList.add('light');
       root.classList.remove('dark');
+      root.classList.add('light');
     } else {
-      root.classList.add('dark');
       root.classList.remove('light');
+      root.classList.add('dark');
     }
   }, [theme]);
 

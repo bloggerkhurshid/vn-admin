@@ -304,12 +304,12 @@ export const TemplatesList: React.FC = () => {
       {/* Header & Add Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Templates Library</h1>
-          <p className="text-sm text-zinc-400 mt-1">Upload and manage VN video editing templates</p>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Templates Library</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Upload and manage VN video editing templates</p>
         </div>
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-zinc-200 text-black font-bold text-sm rounded-xl shadow-lg transition-all shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-sm rounded-xl shadow-lg transition-all shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Upload Template</span>
@@ -317,15 +317,15 @@ export const TemplatesList: React.FC = () => {
       </div>
 
       {/* Search and Filters Bar */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 shadow-sm">
         <form onSubmit={handleSearchSubmit} className="flex-1 w-full relative">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by title or tags..."
-            className="w-full bg-black border border-zinc-800 rounded-xl py-2 pl-10 pr-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white"
+            className="w-full bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl py-2 pl-10 pr-4 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-900 dark:focus:border-white"
           />
         </form>
 
@@ -333,7 +333,7 @@ export const TemplatesList: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-black border border-zinc-800 text-zinc-300 text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-white"
+            className="bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-zinc-900 dark:focus:border-white"
           >
             <option value="">All Statuses</option>
             <option value="published">Published</option>
@@ -343,7 +343,7 @@ export const TemplatesList: React.FC = () => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-black border border-zinc-800 text-zinc-300 text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-white"
+            className="bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-zinc-900 dark:focus:border-white"
           >
             <option value="">All Categories</option>
             {categoriesList.map((cat) => (
@@ -355,7 +355,7 @@ export const TemplatesList: React.FC = () => {
 
           <button
             onClick={fetchTemplates}
-            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-semibold rounded-xl transition-colors"
+            className="px-4 py-2 bg-zinc-900 dark:bg-zinc-800 hover:bg-black dark:hover:bg-zinc-700 text-white text-sm font-semibold rounded-xl transition-colors"
           >
             Filter
           </button>
@@ -363,22 +363,22 @@ export const TemplatesList: React.FC = () => {
       </div>
 
       {/* Templates Table */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-md">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-md">
         {loading ? (
           <div className="p-12 text-center">
-            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="w-8 h-8 border-4 border-zinc-900 dark:border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
           </div>
         ) : templates.length === 0 ? (
-          <div className="p-12 text-center text-zinc-400">
-            <Video className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-            <p className="font-semibold text-white">No templates found</p>
+          <div className="p-12 text-center text-zinc-500 dark:text-zinc-400">
+            <Video className="w-12 h-12 text-zinc-400 dark:text-zinc-600 mx-auto mb-3" />
+            <p className="font-semibold text-zinc-900 dark:text-white">No templates found</p>
             <p className="text-xs text-zinc-500 mt-1">Upload a template or clear your search filters.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-zinc-800 text-xs font-semibold uppercase text-zinc-400 tracking-wider bg-black">
+                <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400 tracking-wider bg-zinc-50 dark:bg-black">
                   <th className="py-3.5 px-4">Thumbnail</th>
                   <th className="py-3.5 px-4">Title & Details</th>
                   <th className="py-3.5 px-4">Category</th>
