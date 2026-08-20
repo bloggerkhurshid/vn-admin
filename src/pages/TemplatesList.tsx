@@ -384,7 +384,7 @@ export const TemplatesList: React.FC = () => {
                   <th className="py-3.5 px-4">Category</th>
                   <th className="py-3.5 px-4">Status</th>
                   <th className="py-3.5 px-4">Added By</th>
-                  <th className="py-3.5 px-4 text-center">Views / Saves</th>
+                  <th className="py-3.5 px-4 text-center">Views / Likes</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>

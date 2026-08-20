@@ -36,7 +36,7 @@ export const Dashboard: React.FC = () => {
   const statCards = [
     { title: 'Total Templates', value: stats?.total_templates || 0, icon: Video },
     { title: 'Registered Users', value: stats?.total_users || 0, icon: Users },
-    { title: 'Saved Favorites', value: stats?.total_saves || 0, icon: Bookmark },
+    { title: 'Total Likes', value: stats?.total_saves || 0, icon: Bookmark },
     { title: 'Active Admins', value: stats?.total_admins || 0, icon: ShieldCheck },
   ];
 
@@ -130,9 +130,9 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Top Saved Templates Table */}
+      {/* Top Liked Templates Table */}
       <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-md">
-        <h2 className="text-lg font-bold text-white mb-4">Top Saved Templates</h2>
+        <h2 className="text-lg font-bold text-white mb-4">Top Liked Templates</h2>
         {stats?.top_saved_templates && stats.top_saved_templates.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
@@ -142,7 +142,7 @@ export const Dashboard: React.FC = () => {
                   <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Added By</th>
                   <th className="py-3 px-4 text-center">Views</th>
-                  <th className="py-3 px-4 text-center">Saves</th>
+                  <th className="py-3 px-4 text-center">Likes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800 text-zinc-300">
