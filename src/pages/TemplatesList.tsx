@@ -549,13 +549,13 @@ export const TemplatesList: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  VN Share Link (Decoded in QR)
+                  VN Template ID / Intent Link *
                 </label>
                 <input
-                  type="url"
+                  type="text"
                   value={formVnLink}
                   onChange={(e) => setFormVnLink(e.target.value)}
-                  placeholder="https://vt.tiktok.com/..."
+                  placeholder="e.g. 926992 or intent://template?id=926992#Intent..."
                   className="w-full bg-black border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition-colors"
                 />
               </div>
