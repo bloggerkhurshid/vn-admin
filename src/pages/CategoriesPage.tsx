@@ -140,17 +140,17 @@ export const CategoriesPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Layers className="w-6 h-6 text-white" />
-            <h1 className="text-2xl font-bold text-white tracking-tight">Categories Management</h1>
+            <Layers className="w-6 h-6 text-zinc-900 dark:text-white" />
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Categories Management</h1>
           </div>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
             Create, update, and manage template categories with custom thumbnails
           </p>
         </div>
 
         <button
           onClick={handleOpenAddModal}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-zinc-200 text-black font-bold rounded-xl shadow-lg transition-all text-sm shrink-0"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black font-bold rounded-xl shadow-lg transition-all text-sm shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Category</span>
@@ -158,10 +158,10 @@ export const CategoriesPage: React.FC = () => {
       </div>
 
       {/* Categories Table / Grid */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-zinc-300">
-            <thead className="bg-zinc-900 text-xs uppercase font-semibold text-zinc-400 border-b border-zinc-800">
+          <table className="w-full text-left text-sm text-zinc-700 dark:text-zinc-300">
+            <thead className="bg-zinc-50 dark:bg-zinc-900 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
               <tr>
                 <th className="px-6 py-4">Thumbnail</th>
                 <th className="px-6 py-4">Category Name</th>
@@ -169,35 +169,35 @@ export const CategoriesPage: React.FC = () => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60">
               {categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-zinc-900/50 transition-colors">
+                <tr key={cat.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
                   <td className="px-6 py-4">
                     {cat.thumbnail ? (
                       <img
                         src={cat.thumbnail}
                         alt={cat.name}
-                        className="w-12 h-12 rounded-xl object-cover border border-zinc-700"
+                        className="w-12 h-12 rounded-xl object-cover border border-zinc-200 dark:border-zinc-700"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500">
+                      <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
                         <ImageIcon className="w-5 h-5" />
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 font-bold text-white text-base">{cat.name}</td>
-                  <td className="px-6 py-4 text-zinc-400 font-mono text-xs">{cat.slug}</td>
+                  <td className="px-6 py-4 font-bold text-zinc-900 dark:text-white text-base">{cat.name}</td>
+                  <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{cat.slug}</td>
                   <td className="px-6 py-4 text-right space-x-2">
                     <button
                       onClick={() => handleOpenEditModal(cat)}
-                      className="p-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg transition-colors inline-flex items-center gap-1 text-xs font-semibold"
+                      className="p-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white rounded-lg transition-colors inline-flex items-center gap-1 text-xs font-semibold"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                       <span>Edit</span>
                     </button>
                     <button
                       onClick={() => handleDelete(cat)}
-                      className="p-2 bg-red-950/60 hover:bg-red-900/80 text-red-300 rounded-lg transition-colors inline-flex items-center gap-1 text-xs font-semibold"
+                      className="p-2 bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/80 text-red-700 dark:text-red-300 rounded-lg transition-colors inline-flex items-center gap-1 text-xs font-semibold"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Delete</span>
@@ -219,15 +219,15 @@ export const CategoriesPage: React.FC = () => {
 
       {/* Add / Edit Category Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-              <h3 className="text-xl font-bold text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-sm">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
                 {editingCategory ? 'Edit Category' : 'Add New Category'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 text-zinc-400 hover:text-white rounded-lg transition-colors"
+                className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-white rounded-lg transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -235,7 +235,7 @@ export const CategoriesPage: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                   Category Name
                 </label>
                 <input
@@ -244,12 +244,12 @@ export const CategoriesPage: React.FC = () => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Travel, Vlog, Reels"
                   required
-                  className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-sm text-white focus:outline-none focus:border-white"
+                  className="w-full bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl py-2.5 px-3.5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-900 dark:focus:border-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                   Category Thumbnail Image
                 </label>
                 <div className="flex items-center gap-4">
@@ -257,15 +257,15 @@ export const CategoriesPage: React.FC = () => {
                     <img
                       src={thumbnailPreview}
                       alt="Preview"
-                      className="w-16 h-16 rounded-2xl object-cover border border-zinc-700"
+                      className="w-16 h-16 rounded-2xl object-cover border border-zinc-200 dark:border-zinc-700"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500">
+                    <div className="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
                       <ImageIcon className="w-6 h-6" />
                     </div>
                   )}
 
-                  <label className="flex-1 cursor-pointer bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-xl p-3 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-colors">
+                  <label className="flex-1 cursor-pointer bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 flex items-center justify-center gap-2 text-xs font-semibold text-zinc-800 dark:text-white transition-colors">
                     <UploadIcon className="w-4 h-4" />
                     <span>{thumbnailFile ? thumbnailFile.name : 'Choose Thumbnail Image'}</span>
                     <input
@@ -278,21 +278,21 @@ export const CategoriesPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-sm font-semibold transition-colors"
+                  className="px-4 py-2.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-white rounded-xl text-sm font-semibold transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2.5 bg-white hover:bg-zinc-200 text-black font-bold rounded-xl text-sm transition-all flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black font-bold rounded-xl text-sm transition-all flex items-center gap-1.5"
                 >
                   {submitting ? (
-                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
