@@ -65,6 +65,8 @@ export interface AppConfig {
   admob_interstitial_id: string;
   admob_native_id: string;
   admob_app_open_id: string;
+  onesignal_app_id?: string;
+  onesignal_rest_key?: string;
   vn_package_name: string;
   privacy_policy_url: string;
   terms_url: string;
