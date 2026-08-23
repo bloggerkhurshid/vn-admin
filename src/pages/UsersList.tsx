@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import { AppUser } from '../types';
-import { Users, Bookmark, Search, UserCheck } from 'lucide-react';
+import { Users, Heart, Search, UserCheck } from 'lucide-react';
 
 export const UsersList: React.FC = () => {
   const [users, setUsers] = useState<AppUser[]>([]);
@@ -97,8 +97,8 @@ export const UsersList: React.FC = () => {
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40 text-zinc-500 dark:text-zinc-400">
                     <span>Phone: {u.phone || 'N/A'}</span>
                     <span className="inline-flex items-center gap-1.5 font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-lg border border-rose-200/80 dark:border-rose-900/50">
-                      <Bookmark className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-                      {u.saves_count ?? 0} saved
+                      <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                      {u.saves_count ?? 0} liked
                     </span>
                   </div>
                 </div>
@@ -113,7 +113,7 @@ export const UsersList: React.FC = () => {
                     <th className="py-3.5 px-6">User</th>
                     <th className="py-3.5 px-6">Phone Number</th>
                     <th className="py-3.5 px-6">Account Status</th>
-                    <th className="py-3.5 px-6 text-center">Saved Templates</th>
+                    <th className="py-3.5 px-6 text-center">Liked Templates</th>
                     <th className="py-3.5 px-6">Registered Date</th>
                   </tr>
                 </thead>
@@ -147,9 +147,9 @@ export const UsersList: React.FC = () => {
                       </td>
 
                       <td className="py-3.5 px-6 text-center">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold border border-indigo-200/80 dark:border-indigo-900/50">
-                          <Bookmark className="w-3.5 h-3.5 fill-indigo-500 text-indigo-500" />
-                          {u.saves_count ?? 0} saved
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 font-bold border border-rose-200/80 dark:border-rose-900/50">
+                          <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                          {u.saves_count ?? 0} liked
                         </span>
                       </td>
 
