@@ -27,7 +27,8 @@ export const Login: React.FC = () => {
         setError(res.data.message || 'Login failed.');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid admin credentials or server error.');
+      const serverMsg = err.response?.data?.message || err.message;
+      setError(serverMsg || 'Invalid admin credentials or server error.');
     } finally {
       setLoading(false);
     }
