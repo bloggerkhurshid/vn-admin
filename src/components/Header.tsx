@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="h-16 border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-4 md:px-8 transition-colors">
+    <header className="h-16 glass-header sticky top-0 z-30 flex items-center justify-between px-4 md:px-8 transition-colors">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuToggle}
