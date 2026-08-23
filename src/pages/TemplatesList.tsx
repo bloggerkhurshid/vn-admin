@@ -592,7 +592,7 @@ export const TemplatesList: React.FC = () => {
 
       {/* TEMPLATE FORM MODAL (Upload / Edit Template) */}
       {showFormModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 dark:bg-black/60 flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] bg-black/40 dark:bg-black/60 flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
           <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-4">
@@ -933,7 +933,7 @@ export const TemplatesList: React.FC = () => {
 
       {/* Media Preview Modal */}
       {previewMedia && (
-        <div className="fixed inset-0 z-50 bg-black/40 dark:bg-black/60 flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] bg-black/40 dark:bg-black/60 flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
           <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto my-0 sm:my-auto">
             <h3 className="text-lg font-bold text-zinc-900 dark:text-white">{previewMedia.title}</h3>
             {previewMedia.type === 'video' ? (
