@@ -55,6 +55,7 @@ export interface DashboardStats {
     this_week: number;
     this_month: number;
   };
+  recent_users?: AppUser[];
   top_saved_templates: TemplateItem[];
   monthly_breakdown?: { month: string; count: number }[];
 }

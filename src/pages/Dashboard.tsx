@@ -247,49 +247,123 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Top Liked Templates Table */}
-      <div className="glass-card rounded-2xl p-6">
-        <h2 className="text-base font-bold text-zinc-900 dark:text-white mb-4">Top Liked Templates</h2>
-        {stats?.top_saved_templates && stats.top_saved_templates.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 border-b border-zinc-200/50 dark:border-zinc-800/50">
-                  <th className="pb-3 px-2">Template</th>
-                  <th className="pb-3 px-2">Category</th>
-                  <th className="pb-3 px-2 text-center">Likes</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-200/40 dark:divide-zinc-800/40">
-                {stats.top_saved_templates.map((tpl) => (
-                  <tr key={tpl.id} className="hover:bg-white/40 dark:hover:bg-zinc-900/40 transition-colors">
-                    <td className="py-2.5 px-2">
+      {/* Bottom Section: Recent Registered Users & Top Liked Templates */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Registered Users */}
+        <div className="glass-card rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <h2 className="text-base font-bold text-zinc-900 dark:text-white">Recent Registered Users</h2>
+              </div>
+              <a
+                href="/users"
+                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                View All →
+              </a>
+            </div>
+
+            {stats?.recent_users && stats.recent_users.length > 0 ? (
+              <div className="space-y-3">
+                {stats.recent_users.map((u) => {
+                  const initials = u.name
+                    ? u.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase()
+                    : 'U';
+
+                  return (
+                    <div
+                      key={u.id}
+                      className="p-3 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between hover:scale-[1.01] transition-transform"
+                    >
                       <div className="flex items-center gap-3">
-                        <img
-                          src={tpl.thumbnail}
-                          alt={tpl.title}
-                          className="w-9 h-9 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-900"
-                        />
-                        <span className="font-semibold text-zinc-900 dark:text-zinc-100">{tpl.title}</span>
+                        {u.avatar ? (
+                          <img src={u.avatar} alt={u.name} className="w-9 h-9 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
+                            {initials}
+                          </div>
+                        )}
+                        <div>
+                          <h4 className="text-xs font-bold text-zinc-900 dark:text-white">{u.name}</h4>
+                          <p className="text-[11px] text-zinc-400 font-mono">{u.email}</p>
+                        </div>
                       </div>
-                    </td>
-                    <td className="py-2.5 px-2 text-zinc-500 dark:text-zinc-400">
-                      {tpl.category || 'General'}
-                    </td>
-                    <td className="py-2.5 px-2 text-center">
-                      <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 font-semibold">
-                        <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-                        {tpl.saves_count}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                            u.status === 'banned'
+                              ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400'
+                              : 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400'
+                          }`}
+                        >
+                          {u.status || 'Active'}
+                        </span>
+                        <span className="text-[10px] text-zinc-400 font-mono">
+                          {new Date(u.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-zinc-500">No users registered yet.</p>
+            )}
           </div>
-        ) : (
-          <p className="text-sm text-zinc-500">No saved templates recorded yet.</p>
-        )}
+        </div>
+
+        {/* Top Liked Templates Table */}
+        <div className="glass-card rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
+                <h2 className="text-base font-bold text-zinc-900 dark:text-white">Top Liked Templates</h2>
+              </div>
+              <a
+                href="/templates"
+                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                View Library →
+              </a>
+            </div>
+
+            {stats?.top_saved_templates && stats.top_saved_templates.length > 0 ? (
+              <div className="space-y-3">
+                {stats.top_saved_templates.map((tpl) => (
+                  <div
+                    key={tpl.id}
+                    className="p-3 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between hover:scale-[1.01] transition-transform"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={tpl.thumbnail}
+                        alt={tpl.title}
+                        className="w-10 h-10 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-900 shadow-sm"
+                      />
+                      <div>
+                        <h4 className="text-xs font-bold text-zinc-900 dark:text-white line-clamp-1">{tpl.title}</h4>
+                        <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                          {tpl.category || 'General'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-xs font-bold">
+                      <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                      <span>{tpl.saves_count}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-zinc-500">No saved templates recorded yet.</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
