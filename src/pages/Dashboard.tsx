@@ -171,47 +171,36 @@ export const Dashboard: React.FC = () => {
 
       {/* Top Liked Templates Table */}
       <div className="glass-card rounded-2xl p-6">
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Top Liked Templates</h2>
+        <h2 className="text-base font-bold text-zinc-900 dark:text-white mb-4">Top Liked Templates</h2>
         {stats?.top_saved_templates && stats.top_saved_templates.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm">
+            <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400 tracking-wider">
-                  <th className="py-3 px-4">Template</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Added By</th>
-                  <th className="py-3 px-4 text-center">Views</th>
-                  <th className="py-3 px-4 text-center">Likes</th>
+                <tr className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 border-b border-zinc-200/50 dark:border-zinc-800/50">
+                  <th className="pb-3 px-2">Template</th>
+                  <th className="pb-3 px-2">Category</th>
+                  <th className="pb-3 px-2 text-center">Likes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
+              <tbody className="divide-y divide-zinc-200/40 dark:divide-zinc-800/40">
                 {stats.top_saved_templates.map((tpl) => (
-                  <tr key={tpl.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-900/60 transition-colors">
-                    <td className="py-3 px-4">
+                  <tr key={tpl.id} className="hover:bg-white/40 dark:hover:bg-zinc-900/40 transition-colors">
+                    <td className="py-2.5 px-2">
                       <div className="flex items-center gap-3">
                         <img
                           src={tpl.thumbnail}
                           alt={tpl.title}
-                          className="w-12 h-12 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
+                          className="w-9 h-9 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-900"
                         />
-                        <span className="font-medium text-zinc-900 dark:text-white">{tpl.title}</span>
+                        <span className="font-semibold text-zinc-900 dark:text-zinc-100">{tpl.title}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800">
-                        {tpl.category || 'General'}
-                      </span>
+                    <td className="py-2.5 px-2 text-zinc-500 dark:text-zinc-400">
+                      {tpl.category || 'General'}
                     </td>
-                    <td className="py-3 px-4 text-zinc-500 dark:text-zinc-400">{tpl.added_by.name}</td>
-                    <td className="py-3 px-4 text-center font-medium">
-                      <span className="inline-flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
-                        <Eye className="w-3.5 h-3.5" />
-                        {tpl.views}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 text-zinc-900 dark:text-white font-semibold bg-zinc-100 dark:bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-300 dark:border-zinc-700">
-                        <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+                    <td className="py-2.5 px-2 text-center">
+                      <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 font-semibold">
+                        <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
                         {tpl.saves_count}
                       </span>
                     </td>
