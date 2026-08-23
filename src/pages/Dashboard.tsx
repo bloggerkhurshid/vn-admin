@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import { DashboardStats } from '../types';
-import { Video, Users, ShieldCheck, Bookmark, Calendar, TrendingUp, Eye, Sparkles, Activity } from 'lucide-react';
+import { Video, Users, ShieldCheck, Heart, Calendar, TrendingUp, Eye, Sparkles, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area } from 'recharts';
 import { useTheme } from '../context/ThemeContext';
 
@@ -40,7 +40,7 @@ export const Dashboard: React.FC = () => {
   const statCards = [
     { title: 'Total Templates', value: stats?.total_templates || 0, icon: Video, color: 'from-blue-600 to-indigo-600' },
     { title: 'Registered Users', value: stats?.total_users || 0, icon: Users, color: 'from-violet-600 to-purple-600' },
-    { title: 'Total Likes', value: stats?.total_saves || 0, icon: Bookmark, color: 'from-emerald-600 to-teal-600' },
+    { title: 'Total Likes', value: stats?.total_saves || 0, icon: Heart, color: 'from-rose-500 to-red-600' },
     { title: 'Active Admins', value: stats?.total_admins || 0, icon: ShieldCheck, color: 'from-amber-500 to-orange-600' },
   ];
 
@@ -211,7 +211,7 @@ export const Dashboard: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 text-center">
                       <span className="inline-flex items-center gap-1 text-zinc-900 dark:text-white font-semibold bg-zinc-100 dark:bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-300 dark:border-zinc-700">
-                        <Bookmark className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-300" />
+                        <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
                         {tpl.saves_count}
                       </span>
                     </td>
