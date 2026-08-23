@@ -10,7 +10,6 @@ import { SetPassword } from './pages/SetPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Dashboard } from './pages/Dashboard';
 import { TemplatesList } from './pages/TemplatesList';
-import { TemplateForm } from './pages/TemplateForm';
 import { AdminsManagement } from './pages/AdminsManagement';
 import { UsersList } from './pages/UsersList';
 import { Profile } from './pages/Profile';
@@ -36,8 +35,6 @@ export const App: React.FC = () => {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/templates" element={<TemplatesList />} />
-              <Route path="/templates/new" element={<TemplateForm />} />
-              <Route path="/templates/edit/:id" element={<TemplateForm />} />
               <Route path="/categories" element={<CategoriesPage />} />
               <Route path="/users" element={<UsersList />} />
               <Route path="/settings" element={<AppSettings />} />
