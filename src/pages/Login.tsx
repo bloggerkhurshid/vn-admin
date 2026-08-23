@@ -111,9 +111,6 @@ export const Login: React.FC = () => {
           </button>
         </form>
 
-        <div className="mt-8 text-center text-xs text-zinc-500 border-t border-zinc-800 dark:border-zinc-800 pt-4">
-          Super Admin: <span className="text-zinc-300 font-medium">khurshid@projuktisoft.com</span>
-        </div>
       </div>
     </div>
   );
