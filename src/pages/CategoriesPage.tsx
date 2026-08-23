@@ -265,8 +265,8 @@ export const CategoriesPage: React.FC = () => {
 
       {/* Add / Edit Category Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] bg-black/60 dark:bg-black/75 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="glass-modal rounded-2xl sm:rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl space-y-5 m-auto max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl space-y-5 my-0 sm:my-auto max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
               <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
                 {editingCategory ? 'Edit Category' : 'Add New Category'}

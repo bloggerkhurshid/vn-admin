@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { api } from '../api/axios';
-import { ArrowLeft, Upload, Video, QrCode, Image as ImageIcon, Save, Check } from 'lucide-react';
+import { ArrowLeft, Video, QrCode, Image as ImageIcon, Save, Check } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
+import QRCode from 'qrcode';
+
+interface CategoryItem {
+  id: number;
+  name: string;
+}
 
 export const TemplateForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +22,7 @@ export const TemplateForm: React.FC = () => {
   const [status, setStatus] = useState<'published' | 'draft'>('published');
   const [isFeatured, setIsFeatured] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
+  const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
 
   // File uploads or preview URLs
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
@@ -33,10 +40,22 @@ export const TemplateForm: React.FC = () => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   useEffect(() => {
+    fetchCategories();
     if (isEdit) {
       fetchTemplateDetails();
     }
   }, [id]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get('/admin/categories');
+      if (res.data.success) {
+        setCategoriesList(res.data.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories list');
+    }
+  };
 
   const fetchTemplateDetails = async () => {
     try {
@@ -48,7 +67,7 @@ export const TemplateForm: React.FC = () => {
         setVnLink(tpl.vn_link || '');
         setTags(tpl.tags || '');
         setStatus(tpl.status);
-        setIsFeatured(tpl.is_featured);
+        setIsFeatured(Boolean(tpl.is_featured));
         setIsPremium(Boolean(tpl.is_premium));
         setThumbnailPreview(tpl.thumbnail);
         setVideoPreview(tpl.video_preview);
@@ -136,7 +155,7 @@ export const TemplateForm: React.FC = () => {
       };
 
       if (isEdit) {
-        await api.put(`/admin/templates/${id}`, formData, config);
+        await api.post(`/admin/templates/${id}`, formData, config);
         addToast('success', 'Template updated successfully');
       } else {
         await api.post('/admin/templates', formData, config);
@@ -163,7 +182,7 @@ export const TemplateForm: React.FC = () => {
   if (fetching) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-indigo-600 dark:border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -176,24 +195,24 @@ export const TemplateForm: React.FC = () => {
       <div className="flex items-center gap-4">
         <Link
           to="/templates"
-          className="p-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors"
+          className="p-2.5 glass-card rounded-xl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">{isEdit ? 'Edit Template' : 'Upload New Template'}</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Provide template files, QR deep link, and metadata</p>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">{isEdit ? 'Edit Template' : 'Upload New Template'}</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Provide template files, QR deep link, and metadata</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Main Details Card */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-5 shadow-lg">
-          <h2 className="text-lg font-bold text-slate-100 border-b border-slate-800 pb-3">1. Basic Details</h2>
+        <div className="glass-card rounded-3xl p-6 space-y-5">
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-white border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">1. Basic Details</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                 Template Title *
               </label>
               <input
@@ -202,45 +221,66 @@ export const TemplateForm: React.FC = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Aesthetic Summer Travel Vlog"
-                className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 px-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                className="w-full glass-input rounded-xl py-3 px-4 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 px-4 text-sm text-slate-100 focus:outline-none focus:border-indigo-500"
+                className="w-full glass-input rounded-xl py-3 px-4 text-sm"
               >
-                <option value="Travel">Travel</option>
-                <option value="Vlog">Vlog</option>
-                <option value="Aesthetic">Aesthetic</option>
-                <option value="Reels">Reels</option>
-                <option value="Beat Sync">Beat Sync</option>
-                <option value="Cinematic">Cinematic</option>
-                <option value="General">General</option>
+                {categoriesList.length === 0 ? (
+                  <option value="General" className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white">General</option>
+                ) : (
+                  categoriesList.map((cat) => (
+                    <option key={cat.id} value={cat.name} className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white">
+                      {cat.name}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              VN Share Link (Decoded in QR)
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
+              VN Template ID / Intent Link *
             </label>
             <input
-              type="url"
+              type="text"
               value={vnLink}
-              onChange={(e) => setVnLink(e.target.value)}
-              placeholder="https://https://vt.tiktok.com/..."
-              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 px-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+              onChange={async (e) => {
+                const val = e.target.value;
+                setVnLink(val);
+                if (val.trim()) {
+                  try {
+                    const qrDataUrl = await QRCode.toDataURL(val.trim(), { width: 600, margin: 2 });
+                    setQrPreview(qrDataUrl);
+                    const blob = await (await fetch(qrDataUrl)).blob();
+                    const generatedFile = new File([blob], `qr_${Date.now()}.webp`, { type: 'image/webp' });
+                    setQrFile(generatedFile);
+                  } catch (err) {
+                    console.error('QR generation failed', err);
+                  }
+                }
+              }}
+              placeholder="e.g. 926992 or intent://template?id=926992#Intent..."
+              className="w-full glass-input rounded-xl py-3 px-4 text-sm"
             />
+            {qrPreview && (
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
+                <Check className="w-3.5 h-3.5" /> Auto-generated QR image from Template ID!
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
               Tags (Comma Separated)
             </label>
             <input
@@ -248,35 +288,35 @@ export const TemplateForm: React.FC = () => {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="travel, summer, vlogging, beatsync"
-              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 px-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+              className="w-full glass-input rounded-xl py-3 px-4 text-sm"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
                 Publish Status
               </label>
               <div className="flex gap-4">
-                <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white cursor-pointer font-medium">
                   <input
                     type="radio"
                     name="status"
                     value="published"
                     checked={status === 'published'}
                     onChange={() => setStatus('published')}
-                    className="accent-indigo-500"
+                    className="accent-indigo-600"
                   />
                   <span>Published</span>
                 </label>
-                <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white cursor-pointer font-medium">
                   <input
                     type="radio"
                     name="status"
                     value="draft"
                     checked={status === 'draft'}
                     onChange={() => setStatus('draft')}
-                    className="accent-indigo-500"
+                    className="accent-indigo-600"
                   />
                   <span>Draft</span>
                 </label>
@@ -284,28 +324,28 @@ export const TemplateForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Template Flags
               </label>
               <div className="flex flex-col sm:flex-row gap-4 pt-1">
-                <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white cursor-pointer font-medium">
                   <input
                     type="checkbox"
                     checked={isFeatured}
                     onChange={(e) => setIsFeatured(e.target.checked)}
-                    className="w-4 h-4 rounded accent-indigo-500"
+                    className="w-4 h-4 rounded accent-indigo-600"
                   />
                   <span>Featured Template</span>
                 </label>
 
-                <label className="flex items-center gap-2 text-sm text-amber-400 font-semibold cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400 font-bold cursor-pointer">
                   <input
                     type="checkbox"
                     checked={isPremium}
                     onChange={(e) => setIsPremium(e.target.checked)}
                     className="w-4 h-4 rounded accent-amber-500"
                   />
-                  <span>⭐ Premium Template (Requires Rewarded Ad to unlock)</span>
+                  <span>⭐ Premium Template</span>
                 </label>
               </div>
             </div>
@@ -313,28 +353,28 @@ export const TemplateForm: React.FC = () => {
         </div>
 
         {/* File Uploaders Card */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-lg">
-          <h2 className="text-lg font-bold text-slate-100 border-b border-slate-800 pb-3">2. Media Files & QR Code</h2>
+        <div className="glass-card rounded-3xl p-6 space-y-6">
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-white border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">2. Media Files &amp; QR Code</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Thumbnail Upload */}
-            <div className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                 Thumbnail Image *
               </label>
-              <div className="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl p-4 text-center bg-slate-950/60 transition-colors relative min-h-48 flex flex-col items-center justify-center">
+              <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-4 text-center glass-card transition-colors relative min-h-48 flex flex-col items-center justify-center group">
                 {thumbnailPreview ? (
-                  <div className="relative w-full h-36 rounded-xl overflow-hidden group">
+                  <div className="relative w-full h-36 rounded-xl overflow-hidden">
                     <img src={thumbnailPreview} alt="Thumbnail Preview" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                       <span className="text-xs text-white bg-indigo-600 px-3 py-1 rounded-lg">Change File</span>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <ImageIcon className="w-8 h-8 text-slate-500 mb-2" />
-                    <p className="text-xs text-slate-400 font-medium">Click or drag image</p>
-                    <p className="text-[10px] text-slate-600 mt-1">JPG, PNG, WEBP</p>
+                    <ImageIcon className="w-8 h-8 text-zinc-400 mb-2" />
+                    <p className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">Click or drag image</p>
+                    <p className="text-[10px] text-zinc-400 mt-1">JPG, PNG, WEBP</p>
                   </>
                 )}
                 <input
@@ -346,23 +386,23 @@ export const TemplateForm: React.FC = () => {
               </div>
               {loading && thumbnailFile && (
                 <div className="space-y-1 mt-2">
-                  <div className="flex justify-between text-[11px] font-medium text-slate-400">
-                    <span>Uploading Thumbnail File ({Math.round((thumbnailFile.size / 1024).toFixed(0) as any)} KB)</span>
-                    <span className="text-indigo-400 font-mono font-bold">{uploadProgress}%</span>
+                  <div className="flex justify-between text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                    <span>Uploading Thumbnail</span>
+                    <span className="text-indigo-600 dark:text-indigo-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
-                    <div className="bg-indigo-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
+                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2 overflow-hidden">
+                    <div className="bg-indigo-600 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                   </div>
                 </div>
               )}
             </div>
 
             {/* Video Preview Upload */}
-            <div className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                 Video Preview (.mp4) *
               </label>
-              <div className="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl p-4 text-center bg-slate-950/60 transition-colors relative min-h-48 flex flex-col items-center justify-center">
+              <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-4 text-center glass-card transition-colors relative min-h-48 flex flex-col items-center justify-center">
                 {videoPreview ? (
                   <div className="relative w-full h-36 rounded-xl overflow-hidden bg-black flex items-center justify-center">
                     <video src={videoPreview} className="w-full h-full object-cover" />
@@ -372,9 +412,9 @@ export const TemplateForm: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <Video className="w-8 h-8 text-slate-500 mb-2" />
-                    <p className="text-xs text-slate-400 font-medium">Click or drag MP4 video</p>
-                    <p className="text-[10px] text-slate-600 mt-1">Max 50MB</p>
+                    <Video className="w-8 h-8 text-zinc-400 mb-2" />
+                    <p className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">Click or drag MP4 video</p>
+                    <p className="text-[10px] text-zinc-400 mt-1">Max 50MB</p>
                   </>
                 )}
                 <input
@@ -386,32 +426,32 @@ export const TemplateForm: React.FC = () => {
               </div>
               {loading && videoFile && (
                 <div className="space-y-1 mt-2">
-                  <div className="flex justify-between text-[11px] font-medium text-slate-400">
-                    <span>Uploading Video File ({Math.round((videoFile.size / (1024 * 1024)).toFixed(1) as any)} MB)</span>
-                    <span className="text-purple-400 font-mono font-bold">{uploadProgress}%</span>
+                  <div className="flex justify-between text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                    <span>Uploading Video</span>
+                    <span className="text-indigo-600 dark:text-indigo-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
-                    <div className="bg-purple-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
+                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2 overflow-hidden">
+                    <div className="bg-indigo-600 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                   </div>
                 </div>
               )}
             </div>
 
             {/* QR Code Upload */}
-            <div className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                 Template QR Image *
               </label>
-              <div className="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl p-4 text-center bg-slate-950/60 transition-colors relative min-h-48 flex flex-col items-center justify-center">
+              <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-4 text-center glass-card transition-colors relative min-h-48 flex flex-col items-center justify-center">
                 {qrPreview ? (
-                  <div className="relative w-full h-36 rounded-xl overflow-hidden bg-white p-2 flex items-center justify-center">
+                  <div className="relative w-full h-36 rounded-xl overflow-hidden bg-white p-2 flex items-center justify-center border border-zinc-200 dark:border-zinc-800">
                     <img src={qrPreview} alt="QR Code" className="max-h-full object-contain" />
                   </div>
                 ) : (
                   <>
-                    <QrCode className="w-8 h-8 text-slate-500 mb-2" />
-                    <p className="text-xs text-slate-400 font-medium">Click or drag QR image</p>
-                    <p className="text-[10px] text-slate-600 mt-1">PNG, JPG</p>
+                    <QrCode className="w-8 h-8 text-zinc-400 mb-2" />
+                    <p className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">Click or drag QR image</p>
+                    <p className="text-[10px] text-zinc-400 mt-1">PNG, JPG</p>
                   </>
                 )}
                 <input
@@ -423,12 +463,12 @@ export const TemplateForm: React.FC = () => {
               </div>
               {loading && qrFile && (
                 <div className="space-y-1 mt-2">
-                  <div className="flex justify-between text-[11px] font-medium text-slate-400">
-                    <span>Uploading QR Image ({Math.round((qrFile.size / 1024).toFixed(0) as any)} KB)</span>
-                    <span className="text-pink-400 font-mono font-bold">{uploadProgress}%</span>
+                  <div className="flex justify-between text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                    <span>Uploading QR Image</span>
+                    <span className="text-indigo-600 dark:text-indigo-400 font-mono font-bold">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
-                    <div className="bg-pink-500 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
+                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2 overflow-hidden">
+                    <div className="bg-indigo-600 h-full rounded-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
                   </div>
                 </div>
               )}
@@ -438,17 +478,17 @@ export const TemplateForm: React.FC = () => {
 
         {/* Upload Progress Bar */}
         {loading && (
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+          <div className="glass-card rounded-3xl p-5 space-y-3 shadow-lg">
             <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-slate-300 flex items-center gap-2">
-                <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-ping" />
+              <span className="text-zinc-900 dark:text-white flex items-center gap-2">
+                <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full animate-ping" />
                 <span>Uploading Template Media Files...</span>
               </span>
-              <span className="text-indigo-400 font-mono text-sm">{uploadProgress}%</span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-mono text-sm font-bold">{uploadProgress}%</span>
             </div>
-            <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800 p-0.5">
+            <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-3 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-300 ease-out shadow-sm shadow-indigo-500/50"
+                className="bg-indigo-600 h-full rounded-full transition-all duration-300 ease-out shadow-sm shadow-indigo-500/50"
                 style={{ width: `${uploadProgress}%` }}
               />
             </div>
@@ -459,14 +499,14 @@ export const TemplateForm: React.FC = () => {
         <div className="flex items-center justify-end gap-4">
           <Link
             to="/templates"
-            className="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition-colors"
+            className="px-5 py-3 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-semibold rounded-xl text-sm transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition-all disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50 flex items-center gap-2 cursor-pointer"
           >
             {loading ? (
               <div className="flex items-center gap-2">

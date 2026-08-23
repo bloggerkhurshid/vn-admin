@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import QRCode from 'qrcode';
 import { api } from '../api/axios';
 import { TemplateItem } from '../types';
@@ -307,13 +308,13 @@ export const TemplatesList: React.FC = () => {
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Templates Library</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Upload and manage VN video editing templates</p>
         </div>
-        <button
-          onClick={openCreateModal}
+        <Link
+          to="/templates/new"
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black font-bold text-sm rounded-xl shadow-lg transition-all shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Upload Template</span>
-        </button>
+        </Link>
       </div>
 
       {/* Search and Filters Bar */}
@@ -440,13 +441,13 @@ export const TemplatesList: React.FC = () => {
                       >
                         <QrCode className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => openEditModal(tpl)}
+                      <Link
+                        to={`/templates/edit/${tpl.id}`}
                         className="p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
                         title="Edit Template"
                       >
                         <Edit className="w-4 h-4" />
-                      </button>
+                      </Link>
                       <button
                         onClick={() => handleDelete(tpl.id, tpl.title)}
                         className="p-2 rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40"
@@ -565,13 +566,13 @@ export const TemplatesList: React.FC = () => {
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => openEditModal(tpl)}
+                          <Link
+                            to={`/templates/edit/${tpl.id}`}
                             className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                             title="Edit Template"
                           >
                             <Edit className="w-4 h-4" />
-                          </button>
+                          </Link>
                           <button
                             onClick={() => handleDelete(tpl.id, tpl.title)}
                             className="p-2 rounded-lg text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
@@ -590,351 +591,10 @@ export const TemplatesList: React.FC = () => {
         )}
       </div>
 
-      {/* TEMPLATE FORM MODAL (Upload / Edit Template) */}
-      {showFormModal && (
-        <div className="fixed inset-0 z-[100] bg-black/60 dark:bg-black/75 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 m-auto">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-4">
-              <div>
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
-                  <span>{editingTemplateId ? 'Edit Template' : 'Upload New Template'}</span>
-                </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                  Fill in template metadata and upload video, thumbnail, and QR image files
-                </p>
-              </div>
-              <button
-                onClick={() => setShowFormModal(false)}
-                className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleFormSubmit} className="space-y-5">
-              {/* Form Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                    Template Title *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formTitle}
-                    onChange={(e) => setFormTitle(e.target.value)}
-                    placeholder="e.g. Aesthetic Summer Vlog"
-                    className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                    Category
-                  </label>
-                  <select
-                    value={formCategory}
-                    onChange={(e) => setFormCategory(e.target.value)}
-                    className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
-                  >
-                    {categoriesList.length === 0 ? (
-                      <option value="General" className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white">General</option>
-                    ) : (
-                      categoriesList.map((cat) => (
-                        <option key={cat.id} value={cat.name} className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white">
-                          {cat.name}
-                        </option>
-                      ))
-                    )}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                  VN Template ID / Intent Link *
-                </label>
-                <input
-                  type="text"
-                  value={formVnLink}
-                  onChange={async (e) => {
-                    const val = e.target.value;
-                    setFormVnLink(val);
-                    if (val.trim()) {
-                      try {
-                        const qrDataUrl = await QRCode.toDataURL(val.trim(), { width: 600, margin: 2 });
-                        setQrPreview(qrDataUrl);
-                        // Convert Data URL to File object for form submission
-                        const blob = await (await fetch(qrDataUrl)).blob();
-                        const generatedFile = new File([blob], `qr_${Date.now()}.webp`, { type: 'image/webp' });
-                        setQrFile(generatedFile);
-                      } catch (err) {
-                        console.error('QR generation failed', err);
-                      }
-                    }
-                  }}
-                  placeholder="e.g. 926992 or intent://template?id=926992#Intent..."
-                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
-                />
-                {qrPreview && (
-                  <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
-                    <Check className="w-3.5 h-3.5" /> Auto-generated QR image from Template ID!
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                  Tags (Comma Separated)
-                </label>
-                <input
-                  type="text"
-                  value={formTags}
-                  onChange={(e) => setFormTags(e.target.value)}
-                  placeholder="travel, summer, vlogging, beatsync"
-                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
-                />
-              </div>
-
-              {/* Status & Options Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 glass-card rounded-2xl">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
-                    Publish Status
-                  </label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white cursor-pointer font-medium">
-                      <input
-                        type="radio"
-                        name="status"
-                        value="published"
-                        checked={formStatus === 'published'}
-                        onChange={() => setFormStatus('published')}
-                        className="accent-indigo-600"
-                      />
-                      <span>Published</span>
-                    </label>
-                    <label className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white cursor-pointer font-medium">
-                      <input
-                        type="radio"
-                        name="status"
-                        value="draft"
-                        checked={formStatus === 'draft'}
-                        onChange={() => setFormStatus('draft')}
-                        className="accent-indigo-600"
-                      />
-                      <span>Draft</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
-                    Featured Status
-                  </label>
-                  <label className="flex items-center gap-2 text-sm text-zinc-900 dark:text-white cursor-pointer font-medium">
-                    <input
-                      type="checkbox"
-                      checked={formIsFeatured}
-                      onChange={(e) => setFormIsFeatured(e.target.checked)}
-                      className="w-4 h-4 rounded accent-indigo-600"
-                    />
-                    <span>Featured Template</span>
-                  </label>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
-                    Monetization
-                  </label>
-                  <label className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400 font-bold cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formIsPremium}
-                      onChange={(e) => setFormIsPremium(e.target.checked)}
-                      className="w-4 h-4 rounded accent-amber-500"
-                    />
-                    <span>⭐ Premium Template</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Media Upload Dropzones */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Thumbnail Dropzone */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                    Thumbnail Image *
-                  </label>
-                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center glass-card transition-colors relative min-h-36 flex flex-col items-center justify-center group">
-                    {thumbnailPreview ? (
-                      <div className="relative w-full h-28 rounded-xl overflow-hidden">
-                        <img src={thumbnailPreview} alt="Thumbnail" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                          <span className="text-xs font-semibold text-white bg-indigo-600 px-3 py-1 rounded-lg">Change</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <ImageIcon className="w-6 h-6 text-zinc-400 mb-1" />
-                        <p className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">Click or drag image</p>
-                        <p className="text-[10px] text-zinc-400 mt-0.5">JPG, PNG, WEBP</p>
-                      </>
-                    )}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={handleThumbnailChange}
-                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                    />
-                  </div>
-                  {submittingForm && thumbnailFile && (
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
-                        <span>Thumbnail</span>
-                        <span className="text-indigo-600 dark:text-indigo-400 font-bold">{uploadProgress}%</span>
-                      </div>
-                      <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-indigo-600 h-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Video Dropzone */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                    Video (.mp4) *
-                  </label>
-                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center glass-card transition-colors relative min-h-36 flex flex-col items-center justify-center group">
-                    {videoPreview ? (
-                      <div className="relative w-full h-28 rounded-xl overflow-hidden bg-zinc-900 flex items-center justify-center">
-                        <video src={videoPreview} className="w-full h-full object-cover" />
-                        <div className="absolute top-2 right-2 bg-indigo-600 text-white p-1 rounded-md">
-                          <Check className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <Video className="w-6 h-6 text-zinc-400 mb-1" />
-                        <p className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">Click or drag MP4 video</p>
-                        <p className="text-[10px] text-zinc-400 mt-0.5">Max 50MB</p>
-                      </>
-                    )}
-                    <input
-                      type="file"
-                      accept="video/mp4,video/quicktime,video/webm"
-                      onChange={handleVideoChange}
-                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                    />
-                  </div>
-                  {submittingForm && videoFile && (
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
-                        <span>Video ({Math.round((videoFile.size / (1024 * 1024)).toFixed(1) as any)}MB)</span>
-                        <span className="text-indigo-600 dark:text-indigo-400 font-bold">{uploadProgress}%</span>
-                      </div>
-                      <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-indigo-600 h-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* QR Dropzone */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
-                    QR Image *
-                  </label>
-                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center glass-card transition-colors relative min-h-36 flex flex-col items-center justify-center group">
-                    {qrPreview ? (
-                      <div className="relative w-full h-28 rounded-xl overflow-hidden bg-white p-1.5 flex items-center justify-center">
-                        <img src={qrPreview} alt="QR Code" className="max-h-full object-contain" />
-                      </div>
-                    ) : (
-                      <>
-                        <QrCode className="w-6 h-6 text-zinc-400 mb-1" />
-                        <p className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">Click or drag QR image</p>
-                        <p className="text-[10px] text-zinc-400 mt-0.5">PNG, JPG</p>
-                      </>
-                    )}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={handleQrChange}
-                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                    />
-                  </div>
-                  {submittingForm && qrFile && (
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
-                        <span>QR Code</span>
-                        <span className="text-indigo-600 dark:text-indigo-400 font-bold">{uploadProgress}%</span>
-                      </div>
-                      <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-indigo-600 h-full transition-all duration-200" style={{ width: `${uploadProgress}%` }} />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Progress Bar Container */}
-              {submittingForm && (
-                <div className="glass-card rounded-2xl p-4 space-y-2.5 shadow-lg">
-                  <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="text-zinc-900 dark:text-white flex items-center gap-2">
-                      <div className="w-2 h-2 bg-indigo-600 rounded-full animate-ping" />
-                      <span>Uploading Template Media Files...</span>
-                    </span>
-                    <span className="text-indigo-600 dark:text-indigo-400 font-mono text-sm font-bold">{uploadProgress}%</span>
-                  </div>
-                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2.5 overflow-hidden">
-                    <div
-                      className="bg-indigo-600 h-full rounded-full transition-all duration-200 ease-out"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-200/50 dark:border-zinc-800/50">
-                <button
-                  type="button"
-                  onClick={() => setShowFormModal(false)}
-                  className="px-5 py-2.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submittingForm}
-                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-500/20 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
-                >
-                  {submittingForm ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Uploading ({uploadProgress}%)</span>
-                    </div>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4" />
-                      <span>{editingTemplateId ? 'Save Changes' : 'Publish Template'}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
       {/* Media Preview Modal */}
       {previewMedia && (
-        <div className="fixed inset-0 z-[100] bg-black/60 dark:bg-black/75 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto m-auto">
+        <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto my-0 sm:my-auto">
             <h3 className="text-lg font-bold text-zinc-900 dark:text-white">{previewMedia.title}</h3>
             {previewMedia.type === 'video' ? (
               <video src={previewMedia.url} controls autoPlay className="w-full rounded-xl max-h-80 bg-black border border-zinc-200 dark:border-zinc-800" />
