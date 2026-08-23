@@ -375,130 +375,217 @@ export const TemplatesList: React.FC = () => {
             <p className="text-xs text-zinc-500 mt-1">Upload a template or clear your search filters.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-zinc-200 dark:border-zinc-800 text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400 tracking-wider bg-zinc-50 dark:bg-black">
-                  <th className="py-3.5 px-4">Thumbnail</th>
-                  <th className="py-3.5 px-4">Title & Details</th>
-                  <th className="py-3.5 px-4">Category</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4">Added By</th>
-                  <th className="py-3.5 px-4 text-center">Views / Likes</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-800 text-zinc-300">
-                {templates.map((tpl) => (
-                  <tr key={tpl.id} className="hover:bg-zinc-900/60 transition-colors">
-                    {/* Thumbnail */}
-                    <td className="py-3.5 px-4">
-                      <div className="relative group w-14 h-14 rounded-xl overflow-hidden bg-black border border-zinc-800">
+          <div className="w-full">
+            {/* Mobile Touch-Friendly Card View (visible < 640px) */}
+            <div className="block sm:hidden divide-y divide-zinc-200/50 dark:divide-zinc-800/50">
+              {templates.map((tpl) => (
+                <div key={tpl.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="relative group w-12 h-12 rounded-xl overflow-hidden bg-zinc-900 shrink-0">
                         <img src={tpl.thumbnail} alt={tpl.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 transition-opacity">
-                          <button
-                            onClick={() => setPreviewMedia({ type: 'video', url: tpl.video_preview, title: tpl.title })}
-                            title="Preview Video"
-                            className="p-1 bg-white text-black rounded"
-                          >
-                            <Video className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => setPreviewMedia({ type: 'qr', url: tpl.template_qr, title: tpl.title })}
-                            title="View QR Code"
-                            className="p-1 bg-zinc-800 text-white rounded"
-                          >
-                            <QrCode className="w-3.5 h-3.5" />
-                          </button>
+                        <button
+                          onClick={() => setPreviewMedia({ type: 'video', url: tpl.video_preview, title: tpl.title })}
+                          className="absolute inset-0 bg-black/50 flex items-center justify-center text-white opacity-0 active:opacity-100"
+                        >
+                          <Video className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-bold text-sm text-zinc-900 dark:text-white leading-tight">{tpl.title}</span>
+                          {tpl.is_premium && (
+                            <span className="px-1.5 py-0.5 text-[9px] font-extrabold uppercase rounded bg-amber-500/20 text-amber-500 border border-amber-500/30">
+                              ⭐ Premium
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
+                          <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
+                            {tpl.category || 'General'}
+                          </span>
+                          <span>• {tpl.added_by.name}</span>
                         </div>
                       </div>
-                    </td>
+                    </div>
 
-                    {/* Title */}
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-white">{tpl.title}</span>
-                        {tpl.is_premium && (
-                          <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/40">
-                            ⭐ Premium
-                          </span>
-                        )}
-                      </div>
-                      {tpl.vn_link && (
-                        <a
-                          href={tpl.vn_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-white mt-0.5"
-                        >
-                          VN Link <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </td>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                        tpl.status === 'published'
+                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                          : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/20'
+                      }`}
+                    >
+                      {tpl.status}
+                    </span>
+                  </div>
 
-                    {/* Category */}
-                    <td className="py-3.5 px-4">
-                      <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-900 text-zinc-300 border border-zinc-800">
-                        {tpl.category || 'General'}
+                  <div className="flex items-center justify-between pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400">
+                        <Eye className="w-3 h-3 text-zinc-400" />
+                        {tpl.views}
                       </span>
-                    </td>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold">
+                        <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+                        {tpl.saves_count}
+                      </span>
+                    </div>
 
-                    {/* Status */}
-                    <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          tpl.status === 'published'
-                            ? 'bg-zinc-800 text-white border border-zinc-600'
-                            : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
-                        }`}
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => setPreviewMedia({ type: 'qr', url: tpl.template_qr, title: tpl.title })}
+                        className="p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                        title="QR Code"
                       >
-                        {tpl.status}
-                      </span>
-                    </td>
+                        <QrCode className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => openEditModal(tpl)}
+                        className="p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
+                        title="Edit Template"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(tpl.id, tpl.title)}
+                        className="p-2 rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                        title="Delete Template"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-                    {/* Added By & Date */}
-                    <td className="py-3.5 px-4 text-xs">
-                      <div className="font-medium text-zinc-200">{tpl.added_by.name}</div>
-                      <div className="text-zinc-500 mt-0.5">{new Date(tpl.created_at).toLocaleDateString()}</div>
-                    </td>
-
-                    {/* Stats */}
-                    <td className="py-3.5 px-4 text-center">
-                      <div className="flex items-center justify-center gap-3 text-xs">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
-                          <Eye className="w-3.5 h-3.5 text-zinc-400" />
-                          {tpl.views}
-                        </span>
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold border border-rose-200/80 dark:border-rose-900/50">
-                          <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-                          {tpl.saves_count}
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => openEditModal(tpl)}
-                          className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-                          title="Edit Template"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(tpl.id, tpl.title)}
-                          className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-                          title="Delete Template"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+            {/* Desktop Table View (visible >= 640px) */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-zinc-200/80 dark:border-zinc-800/80 text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400 tracking-wider">
+                    <th className="py-3.5 px-4">Thumbnail</th>
+                    <th className="py-3.5 px-4">Title & Details</th>
+                    <th className="py-3.5 px-4">Category</th>
+                    <th className="py-3.5 px-4">Status</th>
+                    <th className="py-3.5 px-4">Added By</th>
+                    <th className="py-3.5 px-4 text-center">Views / Likes</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-zinc-200/50 dark:divide-zinc-800/50 text-zinc-700 dark:text-zinc-300">
+                  {templates.map((tpl) => (
+                    <tr key={tpl.id} className="hover:bg-white/40 dark:hover:bg-zinc-900/40 transition-colors">
+                      {/* Thumbnail */}
+                      <td className="py-3.5 px-4">
+                        <div className="relative group w-12 h-12 rounded-xl overflow-hidden bg-black border border-zinc-200 dark:border-zinc-800">
+                          <img src={tpl.thumbnail} alt={tpl.title} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 transition-opacity">
+                            <button
+                              onClick={() => setPreviewMedia({ type: 'video', url: tpl.video_preview, title: tpl.title })}
+                              title="Preview Video"
+                              className="p-1 bg-white text-black rounded"
+                            >
+                              <Video className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => setPreviewMedia({ type: 'qr', url: tpl.template_qr, title: tpl.title })}
+                              title="View QR Code"
+                              className="p-1 bg-zinc-800 text-white rounded"
+                            >
+                              <QrCode className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Title */}
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-zinc-900 dark:text-white">{tpl.title}</span>
+                          {tpl.is_premium && (
+                            <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40">
+                              ⭐ Premium
+                            </span>
+                          )}
+                        </div>
+                        {tpl.vn_link && (
+                          <a
+                            href={tpl.vn_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-white mt-0.5"
+                          >
+                            VN Link <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
+                      </td>
+
+                      {/* Category */}
+                      <td className="py-3.5 px-4">
+                        <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800">
+                          {tpl.category || 'General'}
+                        </span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="py-3.5 px-4">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                            tpl.status === 'published'
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                              : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/30'
+                          }`}
+                        >
+                          {tpl.status}
+                        </span>
+                      </td>
+
+                      {/* Added By & Date */}
+                      <td className="py-3.5 px-4 text-xs">
+                        <div className="font-medium text-zinc-900 dark:text-zinc-200">{tpl.added_by.name}</div>
+                        <div className="text-zinc-500 mt-0.5">{new Date(tpl.created_at).toLocaleDateString()}</div>
+                      </td>
+
+                      {/* Stats */}
+                      <td className="py-3.5 px-4 text-center">
+                        <div className="flex items-center justify-center gap-3 text-xs">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
+                            <Eye className="w-3.5 h-3.5 text-zinc-400" />
+                            {tpl.views}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold border border-rose-200/80 dark:border-rose-900/50">
+                            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+                            {tpl.saves_count}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => openEditModal(tpl)}
+                            className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                            title="Edit Template"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(tpl.id, tpl.title)}
+                            className="p-2 rounded-lg text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                            title="Delete Template"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
