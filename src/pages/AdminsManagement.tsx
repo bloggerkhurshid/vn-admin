@@ -325,16 +325,16 @@ export const AdminsManagement: React.FC = () => {
 
       {/* Add Admin Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
-            <h3 className="text-xl font-bold text-white">Create Admin Account</h3>
-            <p className="text-xs text-zinc-400">
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Create Admin Account</h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
               Admin accounts are created without a password. A set-password link will be generated after creation.
             </p>
 
             <form onSubmit={handleCreateAdmin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                   Full Name
                 </label>
                 <input
@@ -343,12 +343,12 @@ export const AdminsManagement: React.FC = () => {
                   value={addName}
                   onChange={(e) => setAddName(e.target.value)}
                   placeholder="e.g. Sarah Connor"
-                  className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white"
+                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -356,37 +356,37 @@ export const AdminsManagement: React.FC = () => {
                   required
                   value={addEmail}
                   onChange={(e) => setAddEmail(e.target.value)}
-                  placeholder="sarah@vntemplates.com"
-                  className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white"
+                  placeholder="admin@example.com"
+                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                   Role
                 </label>
                 <select
                   value={addRole}
                   onChange={(e) => setAddRole(e.target.value as any)}
-                  className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-sm text-white focus:outline-none focus:border-white"
+                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
                 >
-                  <option value="admin">Admin</option>
-                  <option value="super_admin">Super Admin</option>
+                  <option value="admin" className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white">Standard Admin</option>
+                  <option value="super_admin" className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white">Super Admin</option>
                 </select>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
+              <div className="flex items-center justify-end gap-3 pt-3">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-sm font-semibold rounded-xl"
+                  className="px-4 py-2.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingAdd}
-                  className="px-5 py-2.5 bg-white hover:bg-zinc-200 text-black text-sm font-bold rounded-xl shadow-lg"
+                  className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-500/20"
                 >
                   {submittingAdd ? 'Creating...' : 'Create Admin'}
                 </button>
@@ -398,30 +398,30 @@ export const AdminsManagement: React.FC = () => {
 
       {/* Share Link Modal */}
       {activeShareModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
-            <h3 className="text-xl font-bold text-white">{activeShareModal.title}</h3>
-            <p className="text-xs text-zinc-400">{activeShareModal.subtitle}</p>
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{activeShareModal.title}</h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{activeShareModal.subtitle}</p>
 
-            <div className="flex items-center gap-2 p-3 bg-black border border-zinc-800 rounded-xl">
+            <div className="flex items-center gap-2 p-3 glass-card rounded-xl">
               <input
                 type="text"
                 readOnly
                 value={activeShareModal.url}
-                className="bg-transparent text-xs text-zinc-300 flex-1 outline-none font-mono"
+                className="bg-transparent text-xs text-zinc-700 dark:text-zinc-300 flex-1 outline-none font-mono"
               />
               <button
                 onClick={() => copyToClipboard(activeShareModal.url)}
-                className="p-2 bg-white hover:bg-zinc-200 text-black rounded-lg transition-colors shrink-0 flex items-center gap-1 text-xs font-bold"
+                className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shrink-0 flex items-center gap-1 text-xs font-bold"
               >
-                {copied ? <Check className="w-4 h-4 text-black" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4" />}
                 <span>{copied ? 'Copied!' : 'Copy'}</span>
               </button>
             </div>
 
             <button
               onClick={() => setActiveShareModal(null)}
-              className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-semibold rounded-xl"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-500/20"
             >
               Done
             </button>

@@ -592,8 +592,8 @@ export const TemplatesList: React.FC = () => {
 
       {/* TEMPLATE FORM MODAL (Upload / Edit Template) */}
       {showFormModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl my-auto max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl my-auto max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-5">
               <div>
@@ -933,19 +933,19 @@ export const TemplatesList: React.FC = () => {
 
       {/* Media Preview Modal */}
       {previewMedia && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-white">{previewMedia.title}</h3>
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-white">{previewMedia.title}</h3>
             {previewMedia.type === 'video' ? (
-              <video src={previewMedia.url} controls autoPlay className="w-full rounded-xl max-h-80 bg-black" />
+              <video src={previewMedia.url} controls autoPlay className="w-full rounded-xl max-h-80 bg-black border border-zinc-200 dark:border-zinc-800" />
             ) : (
-              <div className="bg-white p-4 rounded-xl flex items-center justify-center">
+              <div className="bg-white p-4 rounded-xl flex items-center justify-center border border-zinc-200 dark:border-zinc-800">
                 <img src={previewMedia.url} alt="QR Code" className="w-48 h-48 object-contain" />
               </div>
             )}
             <button
               onClick={() => setPreviewMedia(null)}
-              className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-xl text-sm transition-colors"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm transition-colors shadow-lg shadow-indigo-500/20"
             >
               Close Preview
             </button>
