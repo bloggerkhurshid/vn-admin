@@ -317,8 +317,8 @@ export const TemplatesList: React.FC = () => {
       </div>
 
       {/* Search and Filters Bar */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 shadow-sm">
-        <form onSubmit={handleSearchSubmit} className="flex-1 w-full relative">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-center gap-3 shadow-sm">
+        <form onSubmit={handleSearchSubmit} className="w-full sm:flex-1 relative">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500" />
           <input
             type="text"
@@ -329,11 +329,11 @@ export const TemplatesList: React.FC = () => {
           />
         </form>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-zinc-900 dark:focus:border-white"
+            className="w-1/2 sm:w-auto bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-300 text-xs sm:text-sm rounded-xl py-2 px-3 focus:outline-none focus:border-zinc-900 dark:focus:border-white"
           >
             <option value="">All Statuses</option>
             <option value="published">Published</option>
@@ -505,8 +505,8 @@ export const TemplatesList: React.FC = () => {
 
       {/* TEMPLATE FORM MODAL (Upload / Edit Template) */}
       {showFormModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl max-w-3xl w-full p-7 space-y-6 shadow-2xl my-8 animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl my-auto max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-zinc-800/80 pb-5">
               <div>
