@@ -83,84 +83,91 @@ export const Dashboard: React.FC = () => {
 
       {/* Interactive Donut & Graphical Breakdown Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Template Distribution Donut Visualization */}
+        {/* User Roles & Activity Distribution Pie Chart */}
         <div className="lg:col-span-2 glass-card rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <PieChartIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Upload Distribution Donut</h2>
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">User Base Distribution</h2>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-50 dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-zinc-800 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5" /> Monthly Share
+            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-violet-50 dark:bg-zinc-900 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-zinc-800 flex items-center gap-1">
+              <Users className="w-3.5 h-3.5" /> User Roles & Access
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-6">
-            <div className="h-64 w-full relative flex items-center justify-center">
-              {stats?.monthly_breakdown && stats.monthly_breakdown.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={stats.monthly_breakdown}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={65}
-                      outerRadius={95}
-                      paddingAngle={4}
-                      dataKey="count"
-                      nameKey="month"
-                    >
-                      {stats.monthly_breakdown.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: isDark ? '#09090b' : '#ffffff',
-                        borderColor: isDark ? '#27272a' : '#e4e4e7',
-                        borderRadius: '12px',
-                        color: isDark ? '#ffffff' : '#09090b',
-                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="text-zinc-500 text-sm">No monthly data recorded</div>
-              )}
-              {/* Donut Center Stat */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-black text-zinc-900 dark:text-white">{stats?.total_templates || 0}</span>
-                <span className="text-[10px] uppercase font-bold text-zinc-400">Total Items</span>
-              </div>
-            </div>
+          {(() => {
+            const userPieData = [
+              { name: 'App Users', value: stats?.total_users || 0, color: '#8b5cf6' },
+              { name: 'Active Admins', value: stats?.total_admins || 0, color: '#f59e0b' },
+              { name: 'Saved Likes', value: stats?.total_saves || 0, color: '#ec4899' },
+            ];
+            const totalUserBase = userPieData.reduce((acc, curr) => acc + curr.value, 0);
 
-            {/* Custom Interactive Donut Legend */}
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Monthly Share Legend</h3>
-              {stats?.monthly_breakdown && stats.monthly_breakdown.length > 0 ? (
-                stats.monthly_breakdown.map((item, index) => {
-                  const percent = Math.round((item.count / (stats.total_templates || 1)) * 100);
-                  return (
-                    <div key={item.month} className="flex items-center justify-between p-2.5 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                        <span className="text-xs font-bold text-zinc-900 dark:text-white">{item.month}</span>
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-6">
+                <div className="h-64 w-full relative flex items-center justify-center">
+                  {totalUserBase > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={userPieData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={65}
+                          outerRadius={95}
+                          paddingAngle={5}
+                          dataKey="value"
+                          nameKey="name"
+                        >
+                          {userPieData.map((entry, index) => (
+                            <Cell key={`user-cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: isDark ? '#09090b' : '#ffffff',
+                            borderColor: isDark ? '#27272a' : '#e4e4e7',
+                            borderRadius: '12px',
+                            color: isDark ? '#ffffff' : '#09090b',
+                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                          }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="text-zinc-500 text-sm">No user metrics recorded</div>
+                  )}
+                  {/* Donut Center Stat */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-2xl font-black text-zinc-900 dark:text-white">{stats?.total_users || 0}</span>
+                    <span className="text-[10px] uppercase font-bold text-zinc-400">Total Users</span>
+                  </div>
+                </div>
+
+                {/* Custom Interactive Donut Legend */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">User Distribution Legend</h3>
+                  {userPieData.map((item) => {
+                    const percent = totalUserBase > 0 ? Math.round((item.value / totalUserBase) * 100) : 0;
+                    return (
+                      <div key={item.name} className="flex items-center justify-between p-3 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.color }} />
+                          <span className="text-xs font-bold text-zinc-900 dark:text-white">{item.name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{item.value.toLocaleString()}</span>
+                          <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/60 px-2 py-0.5 rounded-md">
+                            {percent}%
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{item.count} items</span>
-                        <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md">
-                          {percent}%
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-xs text-zinc-400">No legend items available</p>
-              )}
-            </div>
-          </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Distribution Radial Meters */}
