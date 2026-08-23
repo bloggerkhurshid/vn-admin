@@ -150,10 +150,12 @@ export const AppSettings: React.FC = () => {
     }, 4000);
   };
 
+  const [activeTab, setActiveTab] = useState<'ads' | 'push' | 'legal'>('ads');
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-indigo-600 dark:border-white border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -170,14 +172,57 @@ export const AppSettings: React.FC = () => {
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">App &amp; Policy Settings</h1>
           </div>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-            Manage AdMob monetization IDs &amp; Markdown Legal Policies for the mobile app
+            Manage AdMob monetization IDs, push notifications, and Markdown Legal Policies
           </p>
         </div>
       </div>
 
+      {/* Tab Pill Navigation */}
+      <div className="flex items-center gap-2 p-1.5 glass-card rounded-2xl w-fit">
+        <button
+          type="button"
+          onClick={() => setActiveTab('ads')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'ads'
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+          }`}
+        >
+          <DollarSign className="w-4 h-4" />
+          <span>Monetization &amp; Ads</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('push')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'push'
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+          }`}
+        >
+          <Send className="w-4 h-4" />
+          <span>Push Notifications</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('legal')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'legal'
+              ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          <span>Legal &amp; Policies</span>
+        </button>
+      </div>
+
       <form onSubmit={handleSave} className="space-y-6">
-        {/* AdMob Ads Manager */}
-        <div className="glass-card rounded-3xl p-6 space-y-5">
+        {/* TAB 1: AdMob Ads Manager */}
+        {activeTab === 'ads' && (
+          <div className="glass-card rounded-3xl p-6 space-y-5">
           <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">
             <div className="flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -248,138 +293,144 @@ export const AppSettings: React.FC = () => {
             </div>
           </div>
         </div>
+        )}
 
-        {/* OneSignal Push Notifications Manager */}
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 space-y-5 shadow-md">
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-3">
-            <span className="text-xl">🔔</span>
-            <h2 className="text-lg font-bold text-white">OneSignal Push Notifications</h2>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
-                OneSignal App ID
-              </label>
-              <input
-                type="text"
-                value={onesignalAppId}
-                onChange={(e) => setOnesignalAppId(e.target.value)}
-                placeholder="e.g. 5eb7a318-6b87-430b-93de-..."
-                className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
-                OneSignal REST API Key (For Auto-Pushing New Templates)
-              </label>
-              <input
-                type="password"
-                value={onesignalRestKey}
-                onChange={(e) => setOnesignalRestKey(e.target.value)}
-                placeholder="os_v2_app_..."
-                className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white"
-              />
-              <p className="text-[11px] text-zinc-400 mt-1">
-                When set, creating any new template in the admin panel automatically broadcasts push notifications to all mobile users.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Manual Push Notification Broadcast Card */}
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 space-y-5 shadow-md">
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-3">
-            <Send className="w-5 h-5 text-indigo-400" />
-            <h2 className="text-lg font-bold text-white">Send Manual Push Notification</h2>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
-                Notification Title *
-              </label>
-              <input
-                type="text"
-                value={customTitle}
-                onChange={(e) => setCustomTitle(e.target.value)}
-                placeholder="e.g. 🔥 Trending Template Released!"
-                className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
-                Notification Message *
-              </label>
-              <textarea
-                rows={3}
-                value={customMessage}
-                onChange={(e) => setCustomMessage(e.target.value)}
-                placeholder="Check out our new exclusive VN video editing template available now..."
-                className="w-full bg-black border border-zinc-800 rounded-xl p-3.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
-                  Big Banner Image URL (Optional)
-                </label>
-                <input
-                  type="url"
-                  value={customImageUrl}
-                  onChange={(e) => setCustomImageUrl(e.target.value)}
-                  placeholder="https://example.com/banner.jpg"
-                  className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white font-mono"
-                />
+        {/* TAB 2: OneSignal Push Notifications & Broadcast */}
+        {activeTab === 'push' && (
+          <div className="space-y-6">
+            <div className="glass-card rounded-3xl p-6 space-y-5">
+              <div className="flex items-center gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">
+                <span className="text-xl">🔔</span>
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">OneSignal Push Notifications</h2>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
-                  Click Launch URL (Optional)
-                </label>
-                <input
-                  type="url"
-                  value={customLaunchUrl}
-                  onChange={(e) => setCustomLaunchUrl(e.target.value)}
-                  placeholder="https://vntemplates.com"
-                  className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-white font-mono"
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                    OneSignal App ID
+                  </label>
+                  <input
+                    type="text"
+                    value={onesignalAppId}
+                    onChange={(e) => setOnesignalAppId(e.target.value)}
+                    placeholder="e.g. 5eb7a318-6b87-430b-93de-..."
+                    className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                    OneSignal REST API Key (For Auto-Pushing New Templates)
+                  </label>
+                  <input
+                    type="password"
+                    value={onesignalRestKey}
+                    onChange={(e) => setOnesignalRestKey(e.target.value)}
+                    placeholder="os_v2_app_..."
+                    className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
+                  />
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">
+                    When set, creating any new template in the admin panel automatically broadcasts push notifications to all mobile users.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleSendManualNotification}
-              disabled={sendingNotification}
-              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-            >
-              {sendingNotification ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  <span>Send Broadcast Notification Now</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
+            {/* Manual Push Notification Broadcast Card */}
+            <div className="glass-card rounded-3xl p-6 space-y-5">
+              <div className="flex items-center gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">
+                <Send className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Send Manual Push Notification</h2>
+              </div>
 
-        {/* Markdown Legal Policies Editor */}
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 space-y-5 shadow-md">
-          <div className="flex items-center gap-2 border-b border-zinc-800 pb-3">
-            <FileText className="w-5 h-5 text-white" />
-            <h2 className="text-lg font-bold text-white">App Legal &amp; Policies (Markdown Format)</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                    Notification Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={customTitle}
+                    onChange={(e) => setCustomTitle(e.target.value)}
+                    placeholder="e.g. 🔥 Trending Template Released!"
+                    className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                    Notification Message *
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    placeholder="Check out our new exclusive VN video editing template available now..."
+                    className="w-full glass-input rounded-xl p-3.5 text-xs"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                      Big Banner Image URL (Optional)
+                    </label>
+                    <input
+                      type="url"
+                      value={customImageUrl}
+                      onChange={(e) => setCustomImageUrl(e.target.value)}
+                      placeholder="https://example.com/banner.jpg"
+                      className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                      Click Launch URL (Optional)
+                    </label>
+                    <input
+                      type="url"
+                      value={customLaunchUrl}
+                      onChange={(e) => setCustomLaunchUrl(e.target.value)}
+                      placeholder="https://vntemplates.com"
+                      className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSendManualNotification}
+                  disabled={sendingNotification}
+                  className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {sendingNotification ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Send Broadcast Notification Now</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: Markdown Legal Policies Editor */}
+        {activeTab === 'legal' && (
+          <div className="glass-card rounded-3xl p-6 space-y-5">
+          <div className="flex items-center gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">
+            <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <h2 className="text-lg font-bold text-zinc-900 dark:text-white">App Legal &amp; Policies (Markdown Format)</h2>
           </div>
 
           {/* Privacy Policy */}
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
-              <Shield className="w-4 h-4 text-emerald-400" />
-              <label className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+              <Shield className="w-4 h-4 text-emerald-500" />
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">
                 Privacy Policy (Markdown)
               </label>
             </div>
@@ -388,15 +439,15 @@ export const AppSettings: React.FC = () => {
               value={privacyPolicyMarkdown}
               onChange={(e) => setPrivacyPolicyMarkdown(e.target.value)}
               placeholder="# Privacy Policy..."
-              className="w-full bg-black border border-zinc-800 rounded-xl p-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white leading-relaxed"
+              className="w-full glass-input rounded-xl p-3.5 text-xs font-mono leading-relaxed"
             />
           </div>
 
           {/* Terms & Conditions */}
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
-              <Scale className="w-4 h-4 text-indigo-400" />
-              <label className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+              <Scale className="w-4 h-4 text-indigo-500" />
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">
                 Terms &amp; Conditions (Markdown)
               </label>
             </div>
@@ -405,15 +456,15 @@ export const AppSettings: React.FC = () => {
               value={termsMarkdown}
               onChange={(e) => setTermsMarkdown(e.target.value)}
               placeholder="# Terms &amp; Conditions..."
-              className="w-full bg-black border border-zinc-800 rounded-xl p-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white leading-relaxed"
+              className="w-full glass-input rounded-xl p-3.5 text-xs font-mono leading-relaxed"
             />
           </div>
 
           {/* Copyright Policy */}
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
-              <FileText className="w-4 h-4 text-rose-400" />
-              <label className="text-xs font-semibold text-zinc-200 uppercase tracking-wider">
+              <FileText className="w-4 h-4 text-rose-500" />
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">
                 Copyright Policy (Markdown)
               </label>
             </div>
@@ -422,18 +473,19 @@ export const AppSettings: React.FC = () => {
               value={copyrightPolicyMarkdown}
               onChange={(e) => setCopyrightPolicyMarkdown(e.target.value)}
               placeholder="# Copyright Policy..."
-              className="w-full bg-black border border-zinc-800 rounded-xl p-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white leading-relaxed"
+              className="w-full glass-input rounded-xl p-3.5 text-xs font-mono leading-relaxed"
             />
           </div>
         </div>
+      )}
 
         <button
           type="submit"
           disabled={saving}
-          className="w-full py-3.5 px-4 bg-white hover:bg-zinc-200 text-black font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+          className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           {saving ? (
-            <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
               <Save className="w-5 h-5" />
