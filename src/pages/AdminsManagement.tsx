@@ -267,8 +267,8 @@ export const AdminsManagement: React.FC = () => {
 
       {/* Add Admin Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-white">Create Admin Account</h3>
             <p className="text-xs text-zinc-400">
               Admin accounts are created without a password. A set-password link will be generated after creation.
@@ -340,8 +340,8 @@ export const AdminsManagement: React.FC = () => {
 
       {/* Share Link Modal */}
       {activeShareModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-white">{activeShareModal.title}</h3>
             <p className="text-xs text-zinc-400">{activeShareModal.subtitle}</p>
 

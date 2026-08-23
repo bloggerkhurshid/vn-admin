@@ -846,8 +846,8 @@ export const TemplatesList: React.FC = () => {
 
       {/* Media Preview Modal */}
       {previewMedia && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl my-auto max-h-[92vh] overflow-y-auto">
             <h3 className="text-lg font-bold text-white">{previewMedia.title}</h3>
             {previewMedia.type === 'video' ? (
               <video src={previewMedia.url} controls autoPlay className="w-full rounded-xl max-h-80 bg-black" />
