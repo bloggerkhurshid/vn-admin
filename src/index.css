@@ -69,12 +69,12 @@
 
   /* Glassmorphism Modals & Popups */
   .glass-modal {
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(24px) saturate(190%);
     -webkit-backdrop-filter: blur(24px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 
-      0 20px 50px -10px rgba(0, 0, 0, 0.15),
+      0 20px 50px -10px rgba(0, 0, 0, 0.18),
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
   }
 
