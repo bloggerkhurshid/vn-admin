@@ -767,7 +767,7 @@ export const TemplatesList: React.FC = () => {
                   <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                     Thumbnail Image *
                   </label>
-                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center bg-white/40 dark:bg-black/40 transition-colors relative min-h-36 flex flex-col items-center justify-center group">
+                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center glass-card transition-colors relative min-h-36 flex flex-col items-center justify-center group">
                     {thumbnailPreview ? (
                       <div className="relative w-full h-28 rounded-xl overflow-hidden">
                         <img src={thumbnailPreview} alt="Thumbnail" className="w-full h-full object-cover" />
@@ -807,7 +807,7 @@ export const TemplatesList: React.FC = () => {
                   <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                     Video (.mp4) *
                   </label>
-                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center bg-white/40 dark:bg-black/40 transition-colors relative min-h-36 flex flex-col items-center justify-center group">
+                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center glass-card transition-colors relative min-h-36 flex flex-col items-center justify-center group">
                     {videoPreview ? (
                       <div className="relative w-full h-28 rounded-xl overflow-hidden bg-zinc-900 flex items-center justify-center">
                         <video src={videoPreview} className="w-full h-full object-cover" />
@@ -847,7 +847,7 @@ export const TemplatesList: React.FC = () => {
                   <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                     QR Image *
                   </label>
-                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center bg-white/40 dark:bg-black/40 transition-colors relative min-h-36 flex flex-col items-center justify-center group">
+                  <div className="border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-indigo-500 rounded-2xl p-3 text-center glass-card transition-colors relative min-h-36 flex flex-col items-center justify-center group">
                     {qrPreview ? (
                       <div className="relative w-full h-28 rounded-xl overflow-hidden bg-white p-1.5 flex items-center justify-center">
                         <img src={qrPreview} alt="QR Code" className="max-h-full object-contain" />
