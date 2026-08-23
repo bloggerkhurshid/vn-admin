@@ -36,20 +36,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-40 h-screen w-64 bg-white dark:bg-zinc-950 border-r border-zinc-200/70 dark:border-zinc-800/70 transition-transform duration-300 ease-out flex flex-col justify-between shadow-2xl md:shadow-none ${
+        className={`fixed top-0 left-0 z-40 h-screen w-64 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-2xl border-r border-zinc-200/80 dark:border-zinc-800/80 transition-transform duration-300 ease-out flex flex-col justify-between shadow-2xl md:shadow-none ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
         <div>
           {/* Logo Header */}
-          <div className="h-16 flex items-center justify-between px-5 border-b border-zinc-200/70 dark:border-zinc-800/70">
+          <div className="h-16 flex items-center justify-between px-5 border-b border-zinc-200/80 dark:border-zinc-800/80">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-zinc-900 dark:bg-white flex items-center justify-center shadow-sm">
-                <VideoIcon className="w-4 h-4 text-white dark:text-zinc-950" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-500/20">
+                <VideoIcon className="w-4 h-4 text-white" />
               </div>
               <div>
                 <h1 className="font-bold text-zinc-900 dark:text-white leading-none tracking-tight text-sm">VN Templates</h1>
-                <span className="text-[10px] tracking-wider text-zinc-400 font-medium uppercase">Admin Studio</span>
+                <span className="text-[10px] tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold uppercase">Admin Studio</span>
               </div>
             </div>
             <button
@@ -70,8 +70,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold shadow-sm'
-                      : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100/70 dark:hover:bg-zinc-900/60'
+                      ? 'bg-indigo-600 text-white dark:bg-indigo-600 dark:text-white font-semibold shadow-md shadow-indigo-500/20'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100/80 dark:hover:bg-zinc-900/80'
                   }`
                 }
               >
@@ -83,9 +83,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer profile / logout */}
-        <div className="p-3.5 border-t border-zinc-200/70 dark:border-zinc-800/70">
+        <div className="p-3.5 border-t border-zinc-200/80 dark:border-zinc-800/80">
           <div className="flex items-center gap-3 px-1 mb-3">
-            <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-bold flex items-center justify-center text-xs shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-zinc-800 to-zinc-900 text-white dark:from-zinc-100 dark:to-white dark:text-zinc-950 font-bold flex items-center justify-center text-xs shadow-sm">
               {admin?.name?.substring(0, 2).toUpperCase() || 'AD'}
             </div>
             <div className="truncate flex-1">

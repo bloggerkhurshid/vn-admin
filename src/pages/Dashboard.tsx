@@ -63,16 +63,16 @@ export const Dashboard: React.FC = () => {
         {statCards.map((card, idx) => (
           <div
             key={idx}
-            className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all shadow-sm dark:shadow-md"
+            className="glass-card rounded-2xl p-5 hover:scale-[1.02] transition-all duration-200"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{card.title}</span>
+              <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">{card.title}</span>
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center shadow-md text-white`}>
                 <card.icon className="w-5 h-5" />
               </div>
             </div>
             <div className="mt-4">
-              <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">{card.value.toLocaleString()}</span>
+              <span className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight">{card.value.toLocaleString()}</span>
             </div>
           </div>
         ))}
@@ -81,7 +81,7 @@ export const Dashboard: React.FC = () => {
       {/* Interactive Analytics Graphs Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Template Upload Growth Area Graph */}
-        <div className="lg:col-span-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm dark:shadow-md">
+        <div className="lg:col-span-2 glass-card rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-indigo-600 dark:text-white" />
@@ -133,7 +133,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Platform Insights & Analytics Breakdown Graph */}
-        <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm dark:shadow-md flex flex-col justify-between">
+        <div className="glass-card rounded-2xl p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Activity className="w-5 h-5 text-indigo-600 dark:text-white" />
@@ -156,11 +156,11 @@ export const Dashboard: React.FC = () => {
             </div>
 
             <div className="mt-4 space-y-2.5">
-              <div className="p-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
+              <div className="p-3 rounded-xl bg-white/50 dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-between text-xs">
                 <span className="text-zinc-600 dark:text-zinc-400">Total Likes</span>
                 <span className="font-bold text-zinc-900 dark:text-white">{stats?.total_saves || 0} likes</span>
               </div>
-              <div className="p-3 rounded-xl bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
+              <div className="p-3 rounded-xl bg-white/50 dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-between text-xs">
                 <span className="text-zinc-600 dark:text-zinc-400">Active Admins</span>
                 <span className="font-bold text-zinc-900 dark:text-white">{stats?.total_admins || 0} admins</span>
               </div>
@@ -170,7 +170,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Top Liked Templates Table */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm dark:shadow-md">
+      <div className="glass-card rounded-2xl p-6">
         <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Top Liked Templates</h2>
         {stats?.top_saved_templates && stats.top_saved_templates.length > 0 ? (
           <div className="overflow-x-auto">

@@ -35,17 +35,17 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Black & White subtle glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-zinc-800/30 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 flex items-center justify-center p-4 relative overflow-hidden transition-colors">
+      {/* Dynamic ambient glass glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/20 dark:bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-8 shadow-2xl relative z-10">
+      <div className="w-full max-w-md glass-modal rounded-3xl p-8 shadow-2xl relative z-10">
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-lg mb-4">
-            <VideoIcon className="w-8 h-8 text-black" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
+            <VideoIcon className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">VN Templates Admin</h1>
-          <p className="text-sm text-zinc-400 mt-1">Sign in to manage templates & platform stats</p>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">VN Templates Admin</h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Sign in to manage templates & platform stats</p>
         </div>
 
         {error && (
