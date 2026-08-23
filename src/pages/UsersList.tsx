@@ -96,9 +96,9 @@ export const UsersList: React.FC = () => {
 
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40 text-zinc-500 dark:text-zinc-400">
                     <span>Phone: {u.phone || 'N/A'}</span>
-                    <span className="inline-flex items-center gap-1 font-semibold text-rose-600 dark:text-rose-400">
+                    <span className="inline-flex items-center gap-1.5 font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-lg border border-rose-200/80 dark:border-rose-900/50">
                       <Bookmark className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-                      {u.saves_count || 0} saved
+                      {u.saves_count ?? 0} saved
                     </span>
                   </div>
                 </div>
@@ -123,7 +123,7 @@ export const UsersList: React.FC = () => {
                       <td className="py-3.5 px-6">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
-                            {u.name.substring(0, 2).toUpperCase()}
+                            {u.name ? u.name.substring(0, 2).toUpperCase() : 'U'}
                           </div>
                           <div>
                             <div className="font-bold text-zinc-900 dark:text-white">{u.name}</div>
@@ -147,9 +147,9 @@ export const UsersList: React.FC = () => {
                       </td>
 
                       <td className="py-3.5 px-6 text-center">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold border border-rose-200/80 dark:border-rose-900/50">
-                          <Bookmark className="w-3.5 h-3.5 text-rose-500" />
-                          {u.saves_count || 0}
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold border border-indigo-200/80 dark:border-indigo-900/50">
+                          <Bookmark className="w-3.5 h-3.5 fill-indigo-500 text-indigo-500" />
+                          {u.saves_count ?? 0} saved
                         </span>
                       </td>
 
