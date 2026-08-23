@@ -83,90 +83,100 @@ export const Dashboard: React.FC = () => {
 
       {/* Interactive Donut & Graphical Breakdown Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* User Roles & Activity Distribution Pie Chart */}
+        {/* AdMob Style User Registration Comparison Grid */}
         <div className="lg:col-span-2 glass-card rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <PieChartIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">User Base Distribution</h2>
+              <Users className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">User Acquisition Overview</h2>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-violet-50 dark:bg-zinc-900 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-zinc-800 flex items-center gap-1">
-              <Users className="w-3.5 h-3.5" /> User Roles & Access
+            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50 flex items-center gap-1.5 font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Stats
             </span>
           </div>
 
           {(() => {
             const joinStats = stats?.user_join_stats || { today: 0, yesterday: 0, this_week: 0, this_month: 0 };
-            const userPieData = [
-              { name: 'Joined Today', value: joinStats.today, color: '#10b981' },
-              { name: 'Joined Yesterday', value: joinStats.yesterday, color: '#3b82f6' },
-              { name: 'Joined This Week', value: joinStats.this_week, color: '#8b5cf6' },
-              { name: 'Joined This Month', value: joinStats.this_month, color: '#ec4899' },
+            
+            // Calculate comparison percentages (Today vs Yesterday)
+            const todayVsYesterday = joinStats.yesterday > 0 
+              ? Math.round(((joinStats.today - joinStats.yesterday) / joinStats.yesterday) * 100) 
+              : (joinStats.today > 0 ? 100 : 0);
+
+            const admobCards = [
+              {
+                label: 'Today so far',
+                value: joinStats.today,
+                subtext: 'vs Yesterday',
+                diff: todayVsYesterday,
+                color: 'from-emerald-500/10 to-teal-500/10',
+                borderColor: 'border-emerald-500/20',
+                accentColor: 'text-emerald-600 dark:text-emerald-400',
+              },
+              {
+                label: 'Yesterday',
+                value: joinStats.yesterday,
+                subtext: 'Completed',
+                diff: null,
+                color: 'from-blue-500/10 to-indigo-500/10',
+                borderColor: 'border-blue-500/20',
+                accentColor: 'text-blue-600 dark:text-blue-400',
+              },
+              {
+                label: 'This week so far',
+                value: joinStats.this_week,
+                subtext: 'Current 7 Days',
+                diff: null,
+                color: 'from-violet-500/10 to-purple-500/10',
+                borderColor: 'border-violet-500/20',
+                accentColor: 'text-violet-600 dark:text-violet-400',
+              },
+              {
+                label: 'This month so far',
+                value: joinStats.this_month,
+                subtext: 'Current Month',
+                diff: null,
+                color: 'from-pink-500/10 to-rose-500/10',
+                borderColor: 'border-pink-500/20',
+                accentColor: 'text-pink-600 dark:text-pink-400',
+              },
             ];
-            const totalRegistrations = userPieData.reduce((acc, curr) => acc + curr.value, 0);
 
             return (
-              <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-6">
-                <div className="h-64 w-full relative flex items-center justify-center">
-                  {totalRegistrations > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={userPieData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={65}
-                          outerRadius={95}
-                          paddingAngle={5}
-                          dataKey="value"
-                          nameKey="name"
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {admobCards.map((card, idx) => (
+                  <div
+                    key={idx}
+                    className={`p-5 rounded-2xl bg-gradient-to-br ${card.color} border ${card.borderColor} flex flex-col justify-between hover:scale-[1.01] transition-transform`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                        {card.label}
+                      </span>
+                      {card.diff !== null && (
+                        <span
+                          className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
+                            card.diff >= 0
+                              ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300'
+                              : 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300'
+                          }`}
                         >
-                          {userPieData.map((entry, index) => (
-                            <Cell key={`user-cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: isDark ? '#09090b' : '#ffffff',
-                            borderColor: isDark ? '#27272a' : '#e4e4e7',
-                            borderRadius: '12px',
-                            color: isDark ? '#ffffff' : '#09090b',
-                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="text-zinc-500 text-sm">No recent user registrations</div>
-                  )}
-                  {/* Donut Center Stat */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-2xl font-black text-zinc-900 dark:text-white">{stats?.total_users || 0}</span>
-                    <span className="text-[10px] uppercase font-bold text-zinc-400">Total Users</span>
-                  </div>
-                </div>
+                          {card.diff >= 0 ? `+${card.diff}%` : `${card.diff}%`}
+                        </span>
+                      )}
+                    </div>
 
-                {/* Custom Interactive Donut Legend */}
-                <div className="space-y-2.5">
-                  <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">User Registration Legend</h3>
-                  {userPieData.map((item) => {
-                    const percent = totalRegistrations > 0 ? Math.round((item.value / totalRegistrations) * 100) : 0;
-                    return (
-                      <div key={item.name} className="flex items-center justify-between p-2.5 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                          <span className="text-xs font-bold text-zinc-900 dark:text-white">{item.name}</span>
-                        </div>
-                        <div className="flex items-center gap-2.5">
-                          <span className="text-xs font-bold text-zinc-900 dark:text-white">{item.value.toLocaleString()}</span>
-                          <span className="text-[11px] font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md">
-                            {percent}%
-                          </span>
-                        </div>
+                    <div className="mt-3 flex items-baseline justify-between">
+                      <div>
+                        <span className="text-3xl font-black text-zinc-900 dark:text-white tracking-tight font-mono">
+                          {card.value.toLocaleString()}
+                        </span>
+                        <span className="text-xs font-semibold text-zinc-400 ml-1.5">users</span>
                       </div>
-                    );
-                  })}
-                </div>
+                      <span className="text-[11px] font-medium text-zinc-400">{card.subtext}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             );
           })()}
