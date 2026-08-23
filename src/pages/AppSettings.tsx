@@ -166,10 +166,10 @@ export const AppSettings: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Settings className="w-6 h-6 text-white" />
-            <h1 className="text-2xl font-bold text-white tracking-tight">App &amp; Policy Settings</h1>
+            <Settings className="w-6 h-6 text-zinc-900 dark:text-white" />
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">App &amp; Policy Settings</h1>
           </div>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
             Manage AdMob monetization IDs &amp; Markdown Legal Policies for the mobile app
           </p>
         </div>
@@ -177,26 +177,26 @@ export const AppSettings: React.FC = () => {
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* AdMob Ads Manager */}
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 space-y-5 shadow-md">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <div className="glass-card rounded-3xl p-6 space-y-5">
+          <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-3">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-white" />
-              <h2 className="text-lg font-bold text-white">AdMob Ads Monetization</h2>
+              <DollarSign className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">AdMob Ads Monetization</h2>
             </div>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={adsEnabled}
                 onChange={(e) => setAdsEnabled(e.target.checked)}
-                className="w-4 h-4 rounded accent-white"
+                className="w-4 h-4 rounded accent-indigo-600"
               />
-              <span className="text-xs font-semibold text-white uppercase tracking-wider">Enable Ads</span>
+              <span className="text-xs font-semibold text-zinc-900 dark:text-white uppercase tracking-wider">Enable Ads</span>
             </label>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                 AdMob Banner Unit ID
               </label>
               <input
@@ -204,12 +204,12 @@ export const AppSettings: React.FC = () => {
                 value={admobBannerId}
                 onChange={(e) => setAdmobBannerId(e.target.value)}
                 placeholder="ca-app-pub-3940256099942544/6300978111"
-                className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white"
+                className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                 AdMob Interstitial Unit ID
               </label>
               <input
@@ -217,12 +217,12 @@ export const AppSettings: React.FC = () => {
                 value={admobInterstitialId}
                 onChange={(e) => setAdmobInterstitialId(e.target.value)}
                 placeholder="ca-app-pub-3940256099942544/1033173712"
-                className="w-full bg-black border border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-zinc-600 font-mono focus:outline-none focus:border-white"
+                className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                 AdMob Native Unit ID
               </label>
               <input
@@ -230,12 +230,12 @@ export const AppSettings: React.FC = () => {
                 value={admobNativeId}
                 onChange={(e) => setAdmobNativeId(e.target.value)}
                 placeholder="ca-app-pub-3940256099942544/2247696110"
-                className="w-full bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-900 dark:focus:border-white"
+                className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                 AdMob App Open Unit ID
               </label>
               <input
@@ -243,7 +243,7 @@ export const AppSettings: React.FC = () => {
                 value={admobAppOpenId}
                 onChange={(e) => setAdmobAppOpenId(e.target.value)}
                 placeholder="ca-app-pub-3940256099942544/9257395921"
-                className="w-full bg-zinc-50 dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-xl py-2.5 px-3.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-600 font-mono focus:outline-none focus:border-zinc-900 dark:focus:border-white"
+                className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
               />
             </div>
           </div>

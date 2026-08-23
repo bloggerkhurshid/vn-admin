@@ -168,99 +168,157 @@ export const AdminsManagement: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-6 h-6 text-white" />
-            <h1 className="text-2xl font-bold text-white tracking-tight">Admin Management</h1>
+            <ShieldCheck className="w-6 h-6 text-zinc-900 dark:text-white" />
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Admin Management</h1>
           </div>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
             Super Admin restricted area. Manage administrative accounts and password activation links.
           </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-zinc-200 text-black font-bold text-sm rounded-xl shadow-lg transition-all shrink-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-500/20 transition-all shrink-0 cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />
           <span>Add New Admin</span>
         </button>
       </div>
 
-      {/* Admins Table */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-md">
+      {/* Admins Glass Container */}
+      <div className="glass-card rounded-3xl overflow-hidden">
         {loading ? (
           <div className="p-12 text-center">
-            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="w-8 h-8 border-4 border-indigo-600 dark:border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-zinc-800 text-xs font-semibold uppercase text-zinc-400 tracking-wider bg-black">
-                  <th className="py-3.5 px-4">Admin Name</th>
-                  <th className="py-3.5 px-4">Email</th>
-                  <th className="py-3.5 px-4">Role</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4">Created Date & By</th>
-                  <th className="py-3.5 px-4 text-right">Password Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-800 text-zinc-300">
-                {admins.map((adm) => (
-                  <tr key={adm.id} className="hover:bg-zinc-900/60 transition-colors">
-                    <td className="py-3.5 px-4 font-semibold text-white">{adm.name}</td>
-                    <td className="py-3.5 px-4 text-zinc-300">{adm.email}</td>
-                    <td className="py-3.5 px-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-zinc-900 text-white border border-zinc-700">
-                        {adm.role === 'super_admin' ? 'Super Admin' : 'Admin'}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4">
+          <div className="w-full">
+            {/* Mobile Touch Card View (< 640px) */}
+            <div className="block sm:hidden divide-y divide-zinc-200/50 dark:divide-zinc-800/50">
+              {admins.map((adm) => (
+                <div key={adm.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-bold text-base text-zinc-900 dark:text-white">{adm.name}</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400">{adm.email}</div>
+                    </div>
+                    <button
+                      onClick={() => handleToggleStatus(adm)}
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase cursor-pointer ${
+                        adm.status === 'active'
+                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                          : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/30'
+                      }`}
+                    >
+                      {adm.status}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                    <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-semibold border border-zinc-200 dark:border-zinc-800">
+                      {adm.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                    </span>
+                    <span>Created: {new Date(adm.created_at).toLocaleDateString()}</span>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40">
+                    <button
+                      onClick={() => handleSendSetPassword(adm)}
+                      className="px-2.5 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold rounded-lg border border-indigo-200 dark:border-indigo-900/50"
+                    >
+                      Set Password Link
+                    </button>
+                    <button
+                      onClick={() => handleSendResetPassword(adm)}
+                      className="px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-xs font-semibold rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-1"
+                    >
+                      <KeyRound className="w-3.5 h-3.5" />
+                      <span>Reset</span>
+                    </button>
+                    {adm.role !== 'super_admin' && (
                       <button
-                        onClick={() => handleToggleStatus(adm)}
-                        className={`px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors ${
-                          adm.status === 'active'
-                            ? 'bg-zinc-800 text-white border border-zinc-600'
-                            : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
-                        }`}
+                        onClick={() => handleDeleteAdmin(adm)}
+                        className="p-1.5 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 rounded-lg"
                       >
-                        {adm.status}
+                        <Trash2 className="w-4 h-4" />
                       </button>
-                    </td>
-                    <td className="py-3.5 px-4 text-xs">
-                      <div className="text-zinc-300">{new Date(adm.created_at).toLocaleDateString()}</div>
-                      <div className="text-zinc-500">by {adm.created_by_name || 'System'}</div>
-                    </td>
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => handleSendSetPassword(adm)}
-                          className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold text-white rounded-lg border border-zinc-800 transition-colors cursor-pointer"
-                          title="Generate Set Password link"
-                        >
-                          Set Password Link
-                        </button>
-                        <button
-                          onClick={() => handleSendResetPassword(adm)}
-                          className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold text-zinc-300 rounded-lg border border-zinc-800 transition-colors flex items-center gap-1 cursor-pointer"
-                          title="Generate Reset Password link"
-                        >
-                          <KeyRound className="w-3.5 h-3.5" />
-                          <span>Reset Link</span>
-                        </button>
-                        {adm.role !== 'super_admin' && (
-                          <button
-                            onClick={() => handleDeleteAdmin(adm)}
-                            className="p-1.5 text-zinc-500 hover:text-white transition-colors cursor-pointer"
-                            title="Delete Admin"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                    </td>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (>= 640px) */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-zinc-200/50 dark:border-zinc-800/50 text-xs uppercase font-semibold text-zinc-400 dark:text-zinc-500">
+                    <th className="py-3.5 px-6">Admin Name</th>
+                    <th className="py-3.5 px-6">Email</th>
+                    <th className="py-3.5 px-6">Role</th>
+                    <th className="py-3.5 px-6">Status</th>
+                    <th className="py-3.5 px-6">Created Date & By</th>
+                    <th className="py-3.5 px-6 text-right">Password Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-zinc-200/40 dark:divide-zinc-800/40 text-zinc-700 dark:text-zinc-300">
+                  {admins.map((adm) => (
+                    <tr key={adm.id} className="hover:bg-white/40 dark:hover:bg-zinc-900/40 transition-colors">
+                      <td className="py-3.5 px-6 font-bold text-zinc-900 dark:text-white">{adm.name}</td>
+                      <td className="py-3.5 px-6 text-zinc-500 dark:text-zinc-400">{adm.email}</td>
+                      <td className="py-3.5 px-6">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800">
+                          {adm.role === 'super_admin' ? 'Super Admin' : 'Admin'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-6">
+                        <button
+                          onClick={() => handleToggleStatus(adm)}
+                          className={`px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors ${
+                            adm.status === 'active'
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                              : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/30'
+                          }`}
+                        >
+                          {adm.status}
+                        </button>
+                      </td>
+                      <td className="py-3.5 px-6 text-xs">
+                        <div className="text-zinc-900 dark:text-zinc-300">{new Date(adm.created_at).toLocaleDateString()}</div>
+                        <div className="text-zinc-500">by {adm.created_by_name || 'System'}</div>
+                      </td>
+                      <td className="py-3.5 px-6 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleSendSetPassword(adm)}
+                            className="px-2.5 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-xs font-semibold text-indigo-600 dark:text-indigo-400 rounded-xl border border-indigo-200/80 dark:border-indigo-900/50 transition-colors cursor-pointer"
+                            title="Generate Set Password link"
+                          >
+                            Set Password Link
+                          </button>
+                          <button
+                            onClick={() => handleSendResetPassword(adm)}
+                            className="px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-xs font-semibold text-zinc-700 dark:text-zinc-300 rounded-xl border border-zinc-200 dark:border-zinc-800 transition-colors flex items-center gap-1 cursor-pointer"
+                            title="Generate Reset Password link"
+                          >
+                            <KeyRound className="w-3.5 h-3.5" />
+                            <span>Reset Link</span>
+                          </button>
+                          {adm.role !== 'super_admin' && (
+                            <button
+                              onClick={() => handleDeleteAdmin(adm)}
+                              className="p-1.5 text-zinc-400 hover:text-rose-500 transition-colors cursor-pointer"
+                              title="Delete Admin"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
