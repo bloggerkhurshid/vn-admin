@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { api } from '../api/axios';
 import { TemplateItem } from '../types';
-import { Plus, Search, Eye, Bookmark, Edit, Trash2, Video, QrCode, ExternalLink, X, Save, Image as ImageIcon, Check } from 'lucide-react';
+import { Plus, Search, Eye, Heart, Bookmark, Edit, Trash2, Video, QrCode, ExternalLink, X, Save, Image as ImageIcon, Check } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
 
 export const TemplatesList: React.FC = () => {
@@ -465,12 +465,12 @@ export const TemplatesList: React.FC = () => {
                     {/* Stats */}
                     <td className="py-3.5 px-4 text-center">
                       <div className="flex items-center justify-center gap-3 text-xs">
-                        <span className="inline-flex items-center gap-1 text-zinc-400">
-                          <Eye className="w-3.5 h-3.5 text-zinc-500" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800">
+                          <Eye className="w-3.5 h-3.5 text-zinc-400" />
                           {tpl.views}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-white font-semibold">
-                          <Bookmark className="w-3.5 h-3.5 text-zinc-400" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold border border-rose-200/80 dark:border-rose-900/50">
+                          <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
                           {tpl.saves_count}
                         </span>
                       </div>
