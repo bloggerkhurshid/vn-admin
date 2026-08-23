@@ -325,7 +325,7 @@ export const AdminsManagement: React.FC = () => {
 
       {/* Add Admin Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/40 dark:bg-black/60 flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
           <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-0 sm:my-auto max-h-[92vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Create Admin Account</h3>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -398,7 +398,7 @@ export const AdminsManagement: React.FC = () => {
 
       {/* Share Link Modal */}
       {activeShareModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-md flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/40 dark:bg-black/60 flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
           <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-5 shadow-2xl my-0 sm:my-auto max-h-[92vh] overflow-y-auto">
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{activeShareModal.title}</h3>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">{activeShareModal.subtitle}</p>
