@@ -49,6 +49,12 @@ export interface DashboardStats {
   total_admins: number;
   total_saves: number;
   templates_this_month: number;
+  user_join_stats?: {
+    today: number;
+    yesterday: number;
+    this_week: number;
+    this_month: number;
+  };
   top_saved_templates: TemplateItem[];
   monthly_breakdown?: { month: string; count: number }[];
 }

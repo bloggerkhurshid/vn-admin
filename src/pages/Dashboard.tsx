@@ -96,17 +96,19 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {(() => {
+            const joinStats = stats?.user_join_stats || { today: 0, yesterday: 0, this_week: 0, this_month: 0 };
             const userPieData = [
-              { name: 'App Users', value: stats?.total_users || 0, color: '#8b5cf6' },
-              { name: 'Active Admins', value: stats?.total_admins || 0, color: '#f59e0b' },
-              { name: 'Saved Likes', value: stats?.total_saves || 0, color: '#ec4899' },
+              { name: 'Joined Today', value: joinStats.today, color: '#10b981' },
+              { name: 'Joined Yesterday', value: joinStats.yesterday, color: '#3b82f6' },
+              { name: 'Joined This Week', value: joinStats.this_week, color: '#8b5cf6' },
+              { name: 'Joined This Month', value: joinStats.this_month, color: '#ec4899' },
             ];
-            const totalUserBase = userPieData.reduce((acc, curr) => acc + curr.value, 0);
+            const totalRegistrations = userPieData.reduce((acc, curr) => acc + curr.value, 0);
 
             return (
               <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-6">
                 <div className="h-64 w-full relative flex items-center justify-center">
-                  {totalUserBase > 0 ? (
+                  {totalRegistrations > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -135,7 +137,7 @@ export const Dashboard: React.FC = () => {
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="text-zinc-500 text-sm">No user metrics recorded</div>
+                    <div className="text-zinc-500 text-sm">No recent user registrations</div>
                   )}
                   {/* Donut Center Stat */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -145,19 +147,19 @@ export const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Custom Interactive Donut Legend */}
-                <div className="space-y-3">
-                  <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">User Distribution Legend</h3>
+                <div className="space-y-2.5">
+                  <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">User Registration Legend</h3>
                   {userPieData.map((item) => {
-                    const percent = totalUserBase > 0 ? Math.round((item.value / totalUserBase) * 100) : 0;
+                    const percent = totalRegistrations > 0 ? Math.round((item.value / totalRegistrations) * 100) : 0;
                     return (
-                      <div key={item.name} className="flex items-center justify-between p-3 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50">
+                      <div key={item.name} className="flex items-center justify-between p-2.5 rounded-xl bg-white/40 dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-800/50">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.color }} />
+                          <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
                           <span className="text-xs font-bold text-zinc-900 dark:text-white">{item.name}</span>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{item.value.toLocaleString()}</span>
-                          <span className="text-xs font-mono font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/60 px-2 py-0.5 rounded-md">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-xs font-bold text-zinc-900 dark:text-white">{item.value.toLocaleString()}</span>
+                          <span className="text-[11px] font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-md">
                             {percent}%
                           </span>
                         </div>
