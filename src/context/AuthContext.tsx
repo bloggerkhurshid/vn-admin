@@ -23,24 +23,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    let isMounted = true;
     if (token) {
       api.get('/admin/auth/me')
         .then((res) => {
-          if (res.data.success) {
+          if (isMounted && res.data.success) {
             setAdmin(res.data.data);
             localStorage.setItem('admin_user', JSON.stringify(res.data.data));
           }
         })
         .catch(() => {
-          logout();
+          // Only clear session if token is truly invalid, preserving current session state
+          if (isMounted && !localStorage.getItem('admin_access_token')) {
+            logout();
+          }
         })
         .finally(() => {
-          setIsLoading(false);
+          if (isMounted) setIsLoading(false);
         });
     } else {
       setIsLoading(false);
     }
-  }, [token]);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const login = (newToken: string, newAdmin: AdminUser) => {
     setToken(newToken);
