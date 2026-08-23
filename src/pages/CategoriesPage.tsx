@@ -157,11 +157,57 @@ export const CategoriesPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Categories Table / Grid */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-xl">
-        <div className="overflow-x-auto">
+      {/* Categories Glass Container */}
+      <div className="glass-card rounded-3xl overflow-hidden">
+        {/* Mobile Touch-Friendly Card View (visible < 640px) */}
+        <div className="block sm:hidden divide-y divide-zinc-200/50 dark:divide-zinc-800/50">
+          {categories.map((cat) => (
+            <div key={cat.id} className="p-4 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                {cat.thumbnail ? (
+                  <img
+                    src={cat.thumbnail}
+                    alt={cat.name}
+                    className="w-12 h-12 rounded-xl object-cover bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shrink-0"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-400 shrink-0">
+                    <ImageIcon className="w-5 h-5" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="font-bold text-base text-zinc-900 dark:text-white leading-tight">{cat.name}</h3>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400 font-mono mt-0.5 block">{cat.slug}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => handleOpenEditModal(cat)}
+                  className="p-2.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl transition-colors font-semibold text-xs flex items-center gap-1"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(cat)}
+                  className="p-2.5 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-xl transition-colors font-semibold text-xs flex items-center gap-1"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+          {categories.length === 0 && (
+            <div className="p-8 text-center text-zinc-500 text-sm">
+              No categories found. Click "Add New Category" to create one.
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Clean Glass Table View (visible >= 640px) */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-left text-sm text-zinc-700 dark:text-zinc-300">
-            <thead className="bg-zinc-50 dark:bg-zinc-900 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
+            <thead className="text-xs uppercase font-semibold text-zinc-400 dark:text-zinc-500 border-b border-zinc-200/50 dark:border-zinc-800/50">
               <tr>
                 <th className="px-6 py-4">Thumbnail</th>
                 <th className="px-6 py-4">Category Name</th>
@@ -169,35 +215,35 @@ export const CategoriesPage: React.FC = () => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60">
+            <tbody className="divide-y divide-zinc-200/40 dark:divide-zinc-800/40">
               {categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
-                  <td className="px-6 py-4">
+                <tr key={cat.id} className="hover:bg-white/40 dark:hover:bg-zinc-900/40 transition-colors">
+                  <td className="px-6 py-3.5">
                     {cat.thumbnail ? (
                       <img
                         src={cat.thumbnail}
                         alt={cat.name}
-                        className="w-12 h-12 rounded-xl object-cover border border-zinc-200 dark:border-zinc-700"
+                        className="w-11 h-11 rounded-xl object-cover bg-zinc-100 dark:bg-zinc-900"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
+                      <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-400">
                         <ImageIcon className="w-5 h-5" />
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4 font-bold text-zinc-900 dark:text-white text-base">{cat.name}</td>
-                  <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{cat.slug}</td>
-                  <td className="px-6 py-4 text-right space-x-2">
+                  <td className="px-6 py-3.5 font-bold text-zinc-900 dark:text-white text-sm">{cat.name}</td>
+                  <td className="px-6 py-3.5 text-zinc-500 dark:text-zinc-400 font-mono text-xs">{cat.slug}</td>
+                  <td className="px-6 py-3.5 text-right space-x-2">
                     <button
                       onClick={() => handleOpenEditModal(cat)}
-                      className="p-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white rounded-lg transition-colors inline-flex items-center gap-1 text-xs font-semibold"
+                      className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 rounded-xl transition-colors inline-flex items-center gap-1.5 text-xs font-semibold"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                       <span>Edit</span>
                     </button>
                     <button
                       onClick={() => handleDelete(cat)}
-                      className="p-2 bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/80 text-red-700 dark:text-red-300 rounded-lg transition-colors inline-flex items-center gap-1 text-xs font-semibold"
+                      className="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 rounded-xl transition-colors inline-flex items-center gap-1.5 text-xs font-semibold"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Delete</span>
