@@ -67,6 +67,9 @@ export interface AppConfig {
   secondary_color: string;
   accent_color: string;
   background_mode: 'dark' | 'light';
+  google_auth_enabled?: boolean;
+  google_client_id?: string;
+  google_client_secret?: string;
   ads_enabled: boolean;
   admob_banner_id: string;
   admob_interstitial_id: string;
@@ -74,6 +77,13 @@ export interface AppConfig {
   admob_app_open_id: string;
   onesignal_app_id?: string;
   onesignal_rest_key?: string;
+  smtp_host?: string;
+  smtp_port?: number;
+  smtp_user?: string;
+  smtp_pass?: string;
+  smtp_encryption?: string;
+  smtp_from_email?: string;
+  smtp_from_name?: string;
   vn_package_name: string;
   privacy_policy_url: string;
   terms_url: string;

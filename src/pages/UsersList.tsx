@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import { AppUser } from '../types';
-import { Users, Bookmark, Search, UserCheck } from 'lucide-react';
+import { Users, Search, UserCheck, Trash2, X, AlertTriangle } from 'lucide-react';
+import { ToastContainer, ToastMessage } from '../components/Toast';
 
 export const UsersList: React.FC = () => {
   const [users, setUsers] = useState<AppUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [userToDelete, setUserToDelete] = useState<AppUser | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const addToast = (type: 'success' | 'error', message: string) => {
+    const id = Date.now().toString();
+    setToasts((prev) => [...prev, { id, type, message }]);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   const fetchUsers = async () => {
     try {
@@ -20,8 +33,29 @@ export const UsersList: React.FC = () => {
       }
     } catch (err) {
       console.error('Failed to fetch users list', err);
+      addToast('error', 'Failed to fetch users list');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      const res = await api.delete(`/admin/users/${userToDelete.id}`);
+      if (res.data.success) {
+        setUsers((prev) => prev.filter((u) => u.id !== userToDelete.id));
+        addToast('success', res.data.message || `User ${userToDelete.name} deleted successfully.`);
+        setUserToDelete(null);
+      } else {
+        addToast('error', res.data.message || 'Failed to delete user.');
+      }
+    } catch (err: any) {
+      addToast('error', err.response?.data?.message || 'Failed to delete user account.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -39,7 +73,7 @@ export const UsersList: React.FC = () => {
           <Users className="w-6 h-6 text-zinc-900 dark:text-white" />
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Registered App Users</h1>
         </div>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Mobile application registered end-users and favorite metrics</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Mobile application registered end-users, status, and management</p>
       </div>
 
       {/* Search Bar */}
@@ -83,15 +117,24 @@ export const UsersList: React.FC = () => {
                         <div className="text-xs text-zinc-500 dark:text-zinc-400">{u.email}</div>
                       </div>
                     </div>
-                    <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        u.status === 'active'
-                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
-                          : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/30'
-                      }`}
-                    >
-                      {u.status}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                          u.status === 'active'
+                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                            : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/30'
+                        }`}
+                      >
+                        {u.status}
+                      </span>
+                      <button
+                        onClick={() => setUserToDelete(u)}
+                        className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                        title={`Delete ${u.name}`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40 text-zinc-500 dark:text-zinc-400">
@@ -112,6 +155,7 @@ export const UsersList: React.FC = () => {
                     <th className="py-3.5 px-6">User</th>
                     <th className="py-3.5 px-6">Account Status</th>
                     <th className="py-3.5 px-6">Registered Date</th>
+                    <th className="py-3.5 px-6 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200/40 dark:divide-zinc-800/40 text-zinc-700 dark:text-zinc-300">
@@ -144,6 +188,16 @@ export const UsersList: React.FC = () => {
                       <td className="py-3.5 px-6 text-xs text-zinc-500 dark:text-zinc-400">
                         {new Date(u.created_at).toLocaleDateString()}
                       </td>
+
+                      <td className="py-3.5 px-6 text-right">
+                        <button
+                          onClick={() => setUserToDelete(u)}
+                          className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all duration-200"
+                          title={`Delete ${u.name}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -152,6 +206,69 @@ export const UsersList: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {userToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-md glass-card rounded-3xl p-6 border border-zinc-200/50 dark:border-zinc-800/80 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center border border-red-500/20">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <button
+                onClick={() => !isDeleting && setUserToDelete(null)}
+                disabled={isDeleting}
+                className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-white rounded-xl transition-colors disabled:opacity-50"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-white">Delete User Account</h3>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                Are you sure you want to delete user <strong className="text-zinc-900 dark:text-white">{userToDelete.name}</strong> ({userToDelete.email})?
+              </p>
+              <div className="flex items-start gap-2 text-xs text-red-600 dark:text-red-400 mt-3 bg-red-500/10 border border-red-500/20 rounded-xl p-3">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>All saved templates, favorites, and profile data for this user will be permanently removed. This action cannot be undone.</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setUserToDelete(null)}
+                className="flex-1 py-2.5 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleConfirmDelete}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold shadow-lg shadow-red-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Delete User</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onDismiss={removeToast} />
     </div>
   );
 };
