@@ -78,7 +78,7 @@ export function timeAgo(dateInput: string | Date | number | null | undefined): s
 
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) {
-    return `${diffInMinutes} Min Ago`;
+    return `${diffInMinutes}m Ago`;
   }
 
   const diffInHours = Math.floor(diffInMinutes / 60);
