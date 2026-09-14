@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User, Shield, Mail, Calendar } from 'lucide-react';
+import { formatIST } from '../utils/timeAgo';
 
 export const Profile: React.FC = () => {
   const { admin } = useAuth();
@@ -51,8 +52,8 @@ export const Profile: React.FC = () => {
                 <Calendar className="w-4 h-4 text-zinc-400" />
                 <span>Account Created</span>
               </div>
-              <span className="font-semibold text-zinc-900 dark:text-white text-sm">
-                {new Date(admin.created_at).toLocaleDateString()}
+              <span className="font-semibold text-zinc-900 dark:text-white text-sm" title={formatIST(admin.created_at, true) + ' (IST)'}>
+                {formatIST(admin.created_at, false)}
               </span>
             </div>
           )}

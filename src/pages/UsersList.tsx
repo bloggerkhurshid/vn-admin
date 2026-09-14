@@ -3,7 +3,7 @@ import { api } from '../api/axios';
 import { AppUser } from '../types';
 import { Users, Search, UserCheck, Trash2, X, AlertTriangle } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
-import { timeAgo } from '../utils/timeAgo';
+import { timeAgo, formatIST } from '../utils/timeAgo';
 
 export const UsersList: React.FC = () => {
   const [users, setUsers] = useState<AppUser[]>([]);
@@ -140,7 +140,7 @@ export const UsersList: React.FC = () => {
 
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40 text-zinc-500 dark:text-zinc-400">
                     <span>Joined</span>
-                    <span className="font-mono text-zinc-700 dark:text-zinc-300 font-semibold" title={new Date(u.created_at).toLocaleString()}>
+                    <span className="font-mono text-zinc-700 dark:text-zinc-300 font-semibold" title={formatIST(u.created_at) + ' (IST)'}>
                       {timeAgo(u.created_at)}
                     </span>
                   </div>
@@ -186,7 +186,7 @@ export const UsersList: React.FC = () => {
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-6 text-xs text-zinc-500 dark:text-zinc-400 font-medium" title={new Date(u.created_at).toLocaleString()}>
+                      <td className="py-3.5 px-6 text-xs text-zinc-500 dark:text-zinc-400 font-medium" title={formatIST(u.created_at) + ' (IST)'}>
                         {timeAgo(u.created_at)}
                       </td>
 

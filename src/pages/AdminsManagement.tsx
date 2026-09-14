@@ -3,6 +3,7 @@ import { api } from '../api/axios';
 import { AdminUser } from '../types';
 import { ShieldCheck, UserPlus, KeyRound, Copy, Check, Trash2 } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
+import { formatIST } from '../utils/timeAgo';
 
 export const AdminsManagement: React.FC = () => {
   const [admins, setAdmins] = useState<AdminUser[]>([]);
@@ -217,7 +218,9 @@ export const AdminsManagement: React.FC = () => {
                     <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-semibold border border-zinc-200 dark:border-zinc-800">
                       {adm.role === 'super_admin' ? 'Super Admin' : 'Admin'}
                     </span>
-                    <span>Created: {new Date(adm.created_at).toLocaleDateString()}</span>
+                    <span title={formatIST(adm.created_at, true) + ' (IST)'}>
+                      Created: {formatIST(adm.created_at, false)}
+                    </span>
                   </div>
 
                   <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40">
@@ -283,7 +286,9 @@ export const AdminsManagement: React.FC = () => {
                         </button>
                       </td>
                       <td className="py-3.5 px-6 text-xs">
-                        <div className="text-zinc-900 dark:text-zinc-300">{new Date(adm.created_at).toLocaleDateString()}</div>
+                        <div className="text-zinc-900 dark:text-zinc-300 font-medium" title={formatIST(adm.created_at, true) + ' (IST)'}>
+                          {formatIST(adm.created_at, false)}
+                        </div>
                         <div className="text-zinc-500">by {adm.created_by_name || 'System'}</div>
                       </td>
                       <td className="py-3.5 px-6 text-right">

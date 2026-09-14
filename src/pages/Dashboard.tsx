@@ -4,7 +4,7 @@ import { api } from '../api/axios';
 import { DashboardStats } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { timeAgo } from '../utils/timeAgo';
+import { timeAgo, formatIST } from '../utils/timeAgo';
 import {
   Video,
   Users,
@@ -469,7 +469,7 @@ export const Dashboard: React.FC = () => {
                       </span>
                       <div
                         className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium flex items-center gap-1"
-                        title={new Date(u.created_at).toLocaleString()}
+                        title={formatIST(u.created_at) + ' (IST)'}
                       >
                         <Clock className="w-3 h-3 text-zinc-400" />
                         <span>{timeAgo(u.created_at)}</span>

@@ -4,6 +4,7 @@ import { api } from '../api/axios';
 import { TemplateItem } from '../types';
 import { Plus, Search, Eye, Heart, Bookmark, Edit, Trash2, Video, QrCode, ExternalLink, X, Save, Image as ImageIcon, Check } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
+import { formatIST } from '../utils/timeAgo';
 
 export const TemplatesList: React.FC = () => {
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
@@ -545,7 +546,9 @@ export const TemplatesList: React.FC = () => {
                       {/* Added By & Date */}
                       <td className="py-3.5 px-4 text-xs">
                         <div className="font-medium text-zinc-900 dark:text-zinc-200">{tpl.added_by.name}</div>
-                        <div className="text-zinc-500 mt-0.5">{new Date(tpl.created_at).toLocaleDateString()}</div>
+                        <div className="text-zinc-500 mt-0.5" title={formatIST(tpl.created_at, true) + ' (IST)'}>
+                          {formatIST(tpl.created_at, false)}
+                        </div>
                       </td>
 
                       {/* Stats */}
