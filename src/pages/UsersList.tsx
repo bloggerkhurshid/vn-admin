@@ -3,6 +3,7 @@ import { api } from '../api/axios';
 import { AppUser } from '../types';
 import { Users, Search, UserCheck, Trash2, X, AlertTriangle } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
+import { timeAgo } from '../utils/timeAgo';
 
 export const UsersList: React.FC = () => {
   const [users, setUsers] = useState<AppUser[]>([]);
@@ -138,9 +139,9 @@ export const UsersList: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40 text-zinc-500 dark:text-zinc-400">
-                    <span>Registered Date</span>
-                    <span className="font-mono text-zinc-700 dark:text-zinc-300 font-semibold">
-                      {new Date(u.created_at).toLocaleDateString()}
+                    <span>Joined</span>
+                    <span className="font-mono text-zinc-700 dark:text-zinc-300 font-semibold" title={new Date(u.created_at).toLocaleString()}>
+                      {timeAgo(u.created_at)}
                     </span>
                   </div>
                 </div>
@@ -154,7 +155,7 @@ export const UsersList: React.FC = () => {
                   <tr className="border-b border-zinc-200/50 dark:border-zinc-800/50 text-xs uppercase font-semibold text-zinc-400 dark:text-zinc-500">
                     <th className="py-3.5 px-6">User</th>
                     <th className="py-3.5 px-6">Account Status</th>
-                    <th className="py-3.5 px-6">Registered Date</th>
+                    <th className="py-3.5 px-6">Joined</th>
                     <th className="py-3.5 px-6 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -185,8 +186,8 @@ export const UsersList: React.FC = () => {
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-6 text-xs text-zinc-500 dark:text-zinc-400">
-                        {new Date(u.created_at).toLocaleDateString()}
+                      <td className="py-3.5 px-6 text-xs text-zinc-500 dark:text-zinc-400 font-medium" title={new Date(u.created_at).toLocaleString()}>
+                        {timeAgo(u.created_at)}
                       </td>
 
                       <td className="py-3.5 px-6 text-right">

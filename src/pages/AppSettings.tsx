@@ -1,8 +1,85 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import { AppConfig } from '../types';
-import { Settings, DollarSign, Save, FileText, Shield, Scale, Send, Mail, Key, Eye, EyeOff } from 'lucide-react';
+import { Settings, DollarSign, Save, FileText, Shield, Scale, Send, Mail, Key, Eye, EyeOff, Sparkles, RotateCcw } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
+
+interface NotificationPreset {
+  id: string;
+  badge: string;
+  icon: string;
+  name: string;
+  title: string;
+  message: string;
+  launchUrl?: string;
+}
+
+const NOTIFICATION_PRESETS: NotificationPreset[] = [
+  {
+    id: 'trending',
+    badge: 'Trending',
+    icon: '🔥',
+    name: 'Viral Templates',
+    title: '🔥 Trending Viral Templates Just Dropped!',
+    message: 'New aesthetic reels & TikTok editing templates are now available. Tap to use them in VN Video Editor!',
+  },
+  {
+    id: 'cinematic',
+    badge: 'Cinematic',
+    icon: '🎬',
+    name: 'Cinema LUTs',
+    title: '🎬 New Cinematic & Film LUT Templates',
+    message: 'Transform your raw footage into high-end cinema quality with our newest color grading templates. Try now!',
+  },
+  {
+    id: 'update',
+    badge: 'App Update',
+    icon: '🚀',
+    name: 'Version 1.0.5 Live',
+    title: '🚀 App Update v1.0.5 Is Here!',
+    message: 'Smoother video playback, Google In-App updates & new features added. Update now on Google Play!',
+  },
+  {
+    id: 'beatsync',
+    badge: 'Music & Beats',
+    icon: '🎵',
+    name: 'Beat Sync',
+    title: '🎵 Fast Beat-Sync Video Templates Added',
+    message: 'Sync your cuts perfectly to trending rhythms with just one tap. Create your viral reel today!',
+  },
+  {
+    id: 'weekend',
+    badge: 'Weekend',
+    icon: '🎉',
+    name: 'Weekend Edit',
+    title: '🎉 Weekend Creator Special: 30+ New Styles',
+    message: 'Fresh weekend vlog, travel & aesthetic templates are waiting for you. Level up your timeline!',
+  },
+  {
+    id: 'review',
+    badge: 'Community',
+    icon: '⭐',
+    name: 'Rate Us',
+    title: '⭐ Loving VN Templates? Support Us with 5 Stars!',
+    message: 'Your feedback helps us create better templates every week. Tap here to leave a quick review on Google Play!',
+  },
+  {
+    id: 'reels',
+    badge: 'Social Media',
+    icon: '⚡',
+    name: 'Instagram Reels',
+    title: '⚡ Go Viral This Week on Instagram & TikTok',
+    message: 'Top video creators are using these trending templates. Jump on the trend before everyone else does!',
+  },
+  {
+    id: 'aesthetic',
+    badge: 'Aesthetic',
+    icon: '✨',
+    name: 'Vintage & Retro',
+    title: '✨ 90s Vintage & Retro Film Templates Added',
+    message: 'Give your memories a nostalgic film look with grainy textures, date stamps & VHS effects.',
+  },
+];
 
 export const AppSettings: React.FC = () => {
   const [config, setConfig] = useState<AppConfig | null>(null);
@@ -50,6 +127,7 @@ export const AppSettings: React.FC = () => {
   const [customImageUrl, setCustomImageUrl] = useState('');
   const [customLaunchUrl, setCustomLaunchUrl] = useState('');
   const [sendingNotification, setSendingNotification] = useState(false);
+  const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
 
   // Markdown Legal Policies States
   const [privacyPolicyMarkdown, setPrivacyPolicyMarkdown] = useState('');
@@ -70,33 +148,33 @@ export const AppSettings: React.FC = () => {
         setPrimaryColor(cfg.primary_color);
         setSecondaryColor(cfg.secondary_color);
         setAccentColor(cfg.accent_color);
-        setBackgroundMode(cfg.background_mode);
-        setGoogleAuthEnabled(cfg.google_auth_enabled !== undefined ? cfg.google_auth_enabled : true);
-        setGoogleClientId(cfg.google_client_id || '');
-        setGoogleClientSecret(cfg.google_client_secret || '');
-        setAdsEnabled(cfg.ads_enabled);
-        setAdmobBannerId(cfg.admob_banner_id);
-        setAdmobInterstitialId(cfg.admob_interstitial_id);
-        setAdmobNativeId(cfg.admob_native_id);
+        setBackgroundMode((cfg.background_mode as any) || 'dark');
+        setAdsEnabled(Boolean(cfg.ads_enabled));
+        setAdmobBannerId(cfg.admob_banner_id || '');
+        setAdmobInterstitialId(cfg.admob_interstitial_id || '');
+        setAdmobNativeId(cfg.admob_native_id || '');
         setAdmobAppOpenId(cfg.admob_app_open_id || '');
         setOnesignalAppId(cfg.onesignal_app_id || '');
         setOnesignalRestKey(cfg.onesignal_rest_key || '');
+        setGoogleAuthEnabled(Boolean(cfg.google_auth_enabled));
+        setGoogleClientId(cfg.google_client_id || '');
+        setGoogleClientSecret(cfg.google_client_secret || '');
         setSmtpHost(cfg.smtp_host || '');
-        setSmtpPort(cfg.smtp_port || 587);
+        setSmtpPort(Number(cfg.smtp_port) || 587);
         setSmtpUser(cfg.smtp_user || '');
         setSmtpPass(cfg.smtp_pass || '');
         setSmtpEncryption(cfg.smtp_encryption || 'tls');
         setSmtpFromEmail(cfg.smtp_from_email || '');
         setSmtpFromName(cfg.smtp_from_name || 'VN Templates');
-        setVnPackageName(cfg.vn_package_name);
-        setPrivacyPolicyUrl(cfg.privacy_policy_url);
-        setTermsUrl(cfg.terms_url);
+        setVnPackageName(cfg.vn_package_name || 'com.frontrow.vlog');
+        setPrivacyPolicyUrl(cfg.privacy_policy_url || '');
+        setTermsUrl(cfg.terms_url || '');
         setPrivacyPolicyMarkdown(cfg.privacy_policy_markdown || '');
         setTermsMarkdown(cfg.terms_markdown || '');
         setCopyrightPolicyMarkdown(cfg.copyright_policy_markdown || '');
       }
     } catch (err) {
-      addToast('error', 'Failed to load app settings.');
+      addToast('error', 'Failed to fetch settings from API.');
     } finally {
       setLoading(false);
     }
@@ -123,6 +201,7 @@ export const AppSettings: React.FC = () => {
         setCustomMessage('');
         setCustomImageUrl('');
         setCustomLaunchUrl('');
+        setSelectedPresetId(null);
       } else {
         addToast('error', res.data.message || 'Failed to send push notification.');
       }
@@ -428,7 +507,75 @@ export const AppSettings: React.FC = () => {
                 <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Send Manual Push Notification</h2>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
+                {/* Quick Notification Presets */}
+                <div className="space-y-2.5 bg-zinc-500/5 dark:bg-zinc-900/40 p-4 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/80">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-500" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200">
+                        Quick Notification Presets
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold">
+                        1-Click Auto Fill
+                      </span>
+                    </div>
+                    {(customTitle || customMessage) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCustomTitle('');
+                          setCustomMessage('');
+                          setCustomImageUrl('');
+                          setCustomLaunchUrl('');
+                          setSelectedPresetId(null);
+                        }}
+                        className="text-[11px] text-zinc-400 hover:text-rose-500 transition-colors flex items-center gap-1 cursor-pointer"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        <span>Clear</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    {NOTIFICATION_PRESETS.map((preset) => {
+                      const isSelected = selectedPresetId === preset.id;
+                      return (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedPresetId(preset.id);
+                            setCustomTitle(preset.title);
+                            setCustomMessage(preset.message);
+                            if (preset.launchUrl) setCustomLaunchUrl(preset.launchUrl);
+                            addToast('success', `Applied preset: "${preset.name}"`);
+                          }}
+                          className={`p-3 rounded-xl text-left transition-all border cursor-pointer flex flex-col justify-between group ${
+                            isSelected
+                              ? 'bg-indigo-600/15 border-indigo-500 text-indigo-600 dark:text-indigo-300 shadow-sm ring-1 ring-indigo-500/50 scale-[1.02]'
+                              : 'bg-white/80 dark:bg-zinc-900/80 border-zinc-200/70 dark:border-zinc-800/80 hover:border-indigo-400 hover:shadow-sm text-zinc-700 dark:text-zinc-300'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-1 mb-1.5">
+                            <span className="text-base">{preset.icon}</span>
+                            <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 group-hover:text-indigo-500">
+                              {preset.badge}
+                            </span>
+                          </div>
+                          <div className="text-xs font-bold truncate text-zinc-900 dark:text-white">
+                            {preset.name}
+                          </div>
+                          <div className="text-[10px] text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5">
+                            {preset.title}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
                     Notification Title *
@@ -436,7 +583,10 @@ export const AppSettings: React.FC = () => {
                   <input
                     type="text"
                     value={customTitle}
-                    onChange={(e) => setCustomTitle(e.target.value)}
+                    onChange={(e) => {
+                      setCustomTitle(e.target.value);
+                      setSelectedPresetId(null);
+                    }}
                     placeholder="e.g. 🔥 Trending Template Released!"
                     className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs"
                   />
