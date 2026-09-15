@@ -172,7 +172,7 @@ export const TemplateForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   return (
     <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
-      <div className="relative glass-modal rounded-2xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto bg-slate-900 border border-slate-800">
+      <div className="relative glass-modal rounded-2xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto">
 
       <ToastContainer toasts={toasts} onDismiss={(toastId) => setToasts((prev) => prev.filter((t) => t.id !== toastId))} />
 
