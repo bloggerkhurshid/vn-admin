@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TemplateForm } from './TemplateForm';
+import { TemplateFormModal } from '../components/TemplateFormModal';
 import { api } from '../api/axios';
 import { DashboardStats } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -491,7 +491,12 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {showAddModal && <TemplateForm onClose={() => setShowAddModal(false)} />}
+      {showAddModal && (
+        <TemplateFormModal
+          onClose={() => setShowAddModal(false)}
+          addToast={(type, msg) => alert(msg)} // simple fallback for dashboard
+        />
+      )}
     </div>
   );
 };
