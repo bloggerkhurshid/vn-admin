@@ -110,9 +110,13 @@ export const UsersList: React.FC = () => {
                 <div key={u.id} className="p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold flex items-center justify-center text-xs shadow-md">
-                        {u.name.substring(0, 2).toUpperCase()}
-                      </div>
+                      {u.avatar ? (
+                        <img src={u.avatar} alt={u.name} className="w-10 h-10 rounded-full object-cover border border-indigo-500/20 shadow-sm" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold flex items-center justify-center text-xs shadow-md">
+                          {u.name.substring(0, 2).toUpperCase()}
+                        </div>
+                      )}
                       <div>
                         <div className="font-bold text-sm text-zinc-900 dark:text-white">{u.name}</div>
                         <div className="text-xs text-zinc-500 dark:text-zinc-400">{u.email}</div>
@@ -164,9 +168,13 @@ export const UsersList: React.FC = () => {
                     <tr key={u.id} className="hover:bg-white/40 dark:hover:bg-zinc-900/40 transition-colors">
                       <td className="py-3.5 px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
-                            {u.name.substring(0, 2).toUpperCase()}
-                          </div>
+                          {u.avatar ? (
+                            <img src={u.avatar} alt={u.name} className="w-9 h-9 rounded-full object-cover border border-indigo-500/20 shadow-sm" />
+                          ) : (
+                            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
+                              {u.name.substring(0, 2).toUpperCase()}
+                            </div>
+                          )}
                           <div>
                             <div className="font-bold text-zinc-900 dark:text-white">{u.name}</div>
                             <div className="text-xs text-zinc-500 dark:text-zinc-400">{u.email}</div>
