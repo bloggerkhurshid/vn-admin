@@ -113,6 +113,7 @@ export const Dashboard: React.FC = () => {
 
           <div className="flex items-center flex-wrap gap-3">
             <button
+              type="button"
               onClick={() => fetchDashboardStats(true)}
               disabled={refreshing}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-xs font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50"
@@ -122,7 +123,7 @@ export const Dashboard: React.FC = () => {
               <span>{refreshing ? 'Syncing...' : 'Sync Live Data'}</span>
             </button>
             <Link
-              to="/templates/new"
+              to="/templates?action=new"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-600 hover:bg-indigo-50 font-bold text-xs shadow-lg shadow-black/10 transition-all duration-200 hover:scale-[1.02] cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import QRCode from 'qrcode';
 import { api } from '../api/axios';
 import { TemplateItem } from '../types';
@@ -13,6 +14,8 @@ export const TemplatesList: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Preview Modal State
   const [previewMedia, setPreviewMedia] = useState<{ type: 'video' | 'qr'; url: string; title: string } | null>(null);
@@ -104,6 +107,10 @@ export const TemplatesList: React.FC = () => {
 
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+
+  useEffect(() => {
     fetchTemplates();
   }, [statusFilter, categoryFilter]);
 
@@ -160,6 +167,15 @@ export const TemplatesList: React.FC = () => {
     setQrPreview('');
     setShowFormModal(true);
   };
+
+  useEffect(() => {
+    if (searchParams.get('action') === 'new') {
+      openCreateModal();
+      // Remove the query parameter so it doesn't re-open on refresh
+      searchParams.delete('action');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const openEditModal = (tpl: TemplateItem) => {
     setEditingTemplateId(tpl.id);
