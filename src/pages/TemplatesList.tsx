@@ -48,15 +48,21 @@ export const TemplatesList: React.FC = () => {
 
     setSendingNotif(true);
     try {
-      const res = await api.post('/admin/notifications/send', {
+      const payload: any = {
         title: notifTitle.trim(),
         message: notifMessage.trim(),
-        image_url: notifThumbnail.trim() || undefined,
-        data: {
-          template_id: notificationModalTemplate.id,
-          type: 'new_template'
-        }
-      });
+      };
+
+      if (notifThumbnail.trim()) {
+        payload.image_url = notifThumbnail.trim();
+      }
+
+      payload.data = {
+        template_id: notificationModalTemplate.id,
+        type: 'new_template',
+      };
+
+      const res = await api.post('/admin/notifications/send', payload);
 
       if (res.data.success) {
         addToast('success', res.data.message || `Push notification broadcast sent for "${notificationModalTemplate.title}"!`);
@@ -65,7 +71,8 @@ export const TemplatesList: React.FC = () => {
         addToast('error', res.data.message || 'Failed to send notification.');
       }
     } catch (err: any) {
-      addToast('error', err.response?.data?.message || 'Error sending push notification.');
+      const errMsg = err.response?.data?.message || err.message || 'Error sending push notification.';
+      addToast('error', errMsg);
     } finally {
       setSendingNotif(false);
     }
