@@ -286,10 +286,32 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
             <input
               type="text"
               value={formVnLink}
-              onChange={(e) => setFormVnLink(e.target.value)}
+              onChange={async (e) => {
+                const val = e.target.value;
+                setFormVnLink(val);
+                if (val.trim()) {
+                  try {
+                    const qrDataUrl = await QRCode.toDataURL(val.trim(), { width: 600, margin: 2 });
+                    setQrPreview(qrDataUrl);
+                    const blob = await (await fetch(qrDataUrl)).blob();
+                    const generatedFile = new File([blob], `qr_${Date.now()}.webp`, { type: 'image/webp' });
+                    setQrFile(generatedFile);
+                  } catch (err) {
+                    console.error('QR generation failed', err);
+                  }
+                } else {
+                  setQrPreview('');
+                  setQrFile(null);
+                }
+              }}
               placeholder="e.g. https://vt.tiktok.com/..."
               className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
             />
+            {qrPreview && formVnLink.trim() && (
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
+                <Check className="w-3.5 h-3.5" /> Auto-generated QR image from Link!
+              </p>
+            )}
           </div>
 
           <div>
