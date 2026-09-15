@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { api } from '../api/axios';
-import { ArrowLeft, Upload, Video, QrCode, Image as ImageIcon, Save, Check } from 'lucide-react';
+import { ArrowLeft, Upload, Video, QrCode, Image as ImageIcon, Save, Check, X } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
 
-export const TemplateForm: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const isEdit = Boolean(id);
-  const navigate = useNavigate();
+export const TemplateForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const isEdit = false;
+  const id = null;
 
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('Travel');
@@ -171,21 +170,25 @@ export const TemplateForm: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
+      <div className="relative glass-modal rounded-2xl sm:rounded-3xl max-w-4xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto bg-slate-900 border border-slate-800">
+
       <ToastContainer toasts={toasts} onDismiss={(toastId) => setToasts((prev) => prev.filter((t) => t.id !== toastId))} />
 
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/templates"
-          className="p-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
+      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-100">{isEdit ? 'Edit Template' : 'Upload New Template'}</h1>
           <p className="text-sm text-slate-400 mt-0.5">Provide template files, QR deep link, and metadata</p>
         </div>
+        <button
+          onClick={onClose}
+          type="button"
+          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -470,32 +473,29 @@ export const TemplateForm: React.FC = () => {
         )}
 
         {/* Submit Actions */}
-        <div className="flex items-center justify-end gap-4">
-          <Link
-            to="/templates"
-            className="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition-colors"
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
           >
             Cancel
-          </Link>
+          </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition-all disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Uploading ({uploadProgress}%)</span>
-              </div>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              <>
-                <Save className="w-4 h-4" />
-                <span>{isEdit ? 'Save Changes' : 'Publish Template'}</span>
-              </>
+              <Save className="w-4 h-4" />
             )}
+            <span>{loading ? 'Saving...' : 'Save Template'}</span>
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 };

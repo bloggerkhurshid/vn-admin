@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TemplateForm } from './TemplateForm';
 import { api } from '../api/axios';
 import { DashboardStats } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -31,6 +32,7 @@ export const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const { admin } = useAuth();
   const { theme } = useTheme();
 
@@ -122,13 +124,13 @@ export const Dashboard: React.FC = () => {
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               <span>{refreshing ? 'Syncing...' : 'Sync Live Data'}</span>
             </button>
-            <Link
-              to="/templates?action=new"
+            <button
+              onClick={() => setShowAddModal(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-indigo-600 hover:bg-indigo-50 font-bold text-xs shadow-lg shadow-black/10 transition-all duration-200 hover:scale-[1.02] cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Add New Template</span>
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -488,6 +490,8 @@ export const Dashboard: React.FC = () => {
           )}
         </div>
       </div>
+
+      {showAddModal && <TemplateForm onClose={() => setShowAddModal(false)} />}
     </div>
   );
 };

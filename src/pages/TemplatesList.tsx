@@ -168,15 +168,6 @@ export const TemplatesList: React.FC = () => {
     setShowFormModal(true);
   };
 
-  useEffect(() => {
-    if (searchParams.get('action') === 'new') {
-      openCreateModal();
-      // Remove the query parameter so it doesn't re-open on refresh
-      searchParams.delete('action');
-      setSearchParams(searchParams, { replace: true });
-    }
-  }, [searchParams, setSearchParams]);
-
   const openEditModal = (tpl: TemplateItem) => {
     setEditingTemplateId(tpl.id);
     setFormTitle(tpl.title);
@@ -683,7 +674,8 @@ export const TemplatesList: React.FC = () => {
       {/* TEMPLATE FORM MODAL (Upload / Edit Template) */}
       {showFormModal && (
         <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setShowFormModal(false)} />
+          <div className="relative glass-modal rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-7 space-y-6 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-4">
               <div>
