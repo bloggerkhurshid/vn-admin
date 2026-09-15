@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import { AdminUser } from '../types';
-import { ShieldCheck, UserPlus, KeyRound, Copy, Check, Trash2 } from 'lucide-react';
+import { ShieldCheck, UserPlus, KeyRound, Copy, Check, Trash2, ExternalLink } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
 import { formatIST } from '../utils/timeAgo';
 
@@ -9,6 +9,18 @@ export const AdminsManagement: React.FC = () => {
   const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  // Helper to ensure generated links always point to the active frontend origin
+  const normalizeAdminLink = (rawUrl: string, path: 'set-password' | 'reset-password'): string => {
+    try {
+      if (!rawUrl) return '';
+      // Extract the token (the last pathname segment)
+      const token = rawUrl.split('/').filter(Boolean).pop() || '';
+      return `${window.location.origin}/${path}/${token}`;
+    } catch {
+      return rawUrl;
+    }
+  };
 
   // Add Admin Modal State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -62,10 +74,11 @@ export const AdminsManagement: React.FC = () => {
         fetchAdmins();
 
         if (res.data.data.set_password_url) {
+          const finalUrl = normalizeAdminLink(res.data.data.set_password_url, 'set-password');
           setActiveShareModal({
             title: 'Admin Account Created',
             subtitle: `Share this set-password link with ${addName} (${addEmail}):`,
-            url: res.data.data.set_password_url,
+            url: finalUrl,
           });
         }
       }
@@ -80,10 +93,11 @@ export const AdminsManagement: React.FC = () => {
     try {
       const res = await api.post(`/admin/admins/${admin.id}/send-set-password`);
       if (res.data.success) {
+        const finalUrl = normalizeAdminLink(res.data.data.set_password_url, 'set-password');
         setActiveShareModal({
           title: 'Send Set-Password Link',
           subtitle: `Activation link generated for ${admin.name}:`,
-          url: res.data.data.set_password_url,
+          url: finalUrl,
         });
       }
     } catch (err: any) {
@@ -95,10 +109,11 @@ export const AdminsManagement: React.FC = () => {
     try {
       const res = await api.post(`/admin/admins/${admin.id}/send-reset-password`);
       if (res.data.success) {
+        const finalUrl = normalizeAdminLink(res.data.data.reset_password_url, 'reset-password');
         setActiveShareModal({
           title: 'Reset Password Link Issued',
           subtitle: `Send this reset link to ${admin.name}:`,
-          url: res.data.data.reset_password_url,
+          url: finalUrl,
         });
       }
     } catch (err: any) {
@@ -415,6 +430,16 @@ export const AdminsManagement: React.FC = () => {
                 value={activeShareModal.url}
                 className="bg-transparent text-xs text-zinc-700 dark:text-zinc-300 flex-1 outline-none font-mono"
               />
+              <a
+                href={activeShareModal.url}
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded-lg transition-colors shrink-0 flex items-center gap-1 text-xs font-semibold"
+                title="Open Link in new tab"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Open</span>
+              </a>
               <button
                 onClick={() => copyToClipboard(activeShareModal.url)}
                 className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shrink-0 flex items-center gap-1 text-xs font-bold"
