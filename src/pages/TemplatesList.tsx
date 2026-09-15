@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { api } from '../api/axios';
 import { TemplateItem } from '../types';
-import { Plus, Search, Eye, Heart, Bookmark, Edit, Trash2, Video, QrCode, ExternalLink, X, Save, Image as ImageIcon, Check } from 'lucide-react';
+import { Plus, Search, Eye, Heart, Bookmark, Edit, Trash2, Video, QrCode, ExternalLink, X, Save, Image as ImageIcon, Check, Bell, Send, Sparkles } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
 import { formatIST } from '../utils/timeAgo';
 
@@ -20,6 +20,56 @@ export const TemplatesList: React.FC = () => {
   // Template Form Modal State (Replaces standalone form page)
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingTemplateId, setEditingTemplateId] = useState<number | null>(null);
+
+  // Push Notification Modal State for Template Cards
+  const [notificationModalTemplate, setNotificationModalTemplate] = useState<TemplateItem | null>(null);
+  const [notifTitle, setNotifTitle] = useState('');
+  const [notifMessage, setNotifMessage] = useState('');
+  const [notifThumbnail, setNotifThumbnail] = useState('');
+  const [sendingNotif, setSendingNotif] = useState(false);
+
+  // Open push notification modal prefilled with template title and thumbnail
+  const openNotificationModal = (tpl: TemplateItem) => {
+    setNotificationModalTemplate(tpl);
+    setNotifTitle(`🔥 ${tpl.title}`);
+    const defaultDesc = `Check out the new ${tpl.category || 'trending'} template "${tpl.title}" now available on VN Templates! Tap to open and edit.`;
+    setNotifMessage(defaultDesc);
+    setNotifThumbnail(tpl.thumbnail || '');
+  };
+
+  const handleSendTemplateNotification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!notificationModalTemplate) return;
+
+    if (!notifTitle.trim() || !notifMessage.trim()) {
+      addToast('error', 'Notification title and message are required.');
+      return;
+    }
+
+    setSendingNotif(true);
+    try {
+      const res = await api.post('/admin/notifications/send', {
+        title: notifTitle.trim(),
+        message: notifMessage.trim(),
+        image_url: notifThumbnail.trim() || undefined,
+        data: {
+          template_id: notificationModalTemplate.id,
+          type: 'new_template'
+        }
+      });
+
+      if (res.data.success) {
+        addToast('success', res.data.message || `Push notification broadcast sent for "${notificationModalTemplate.title}"!`);
+        setNotificationModalTemplate(null);
+      } else {
+        addToast('error', res.data.message || 'Failed to send notification.');
+      }
+    } catch (err: any) {
+      addToast('error', err.response?.data?.message || 'Error sending push notification.');
+    } finally {
+      setSendingNotif(false);
+    }
+  };
 
   // Form Field States
   const [formTitle, setFormTitle] = useState('');
@@ -435,6 +485,13 @@ export const TemplatesList: React.FC = () => {
 
                     <div className="flex items-center gap-1">
                       <button
+                        onClick={() => openNotificationModal(tpl)}
+                        className="p-2 rounded-lg text-amber-500 hover:text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40"
+                        title="Send Push Notification"
+                      >
+                        <Bell className="w-4 h-4" />
+                      </button>
+                      <button
                         onClick={() => setPreviewMedia({ type: 'qr', url: tpl.template_qr, title: tpl.title })}
                         className="p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
                         title="QR Code"
@@ -568,6 +625,13 @@ export const TemplatesList: React.FC = () => {
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => openNotificationModal(tpl)}
+                            className="p-2 rounded-lg text-zinc-500 hover:text-amber-500 dark:text-zinc-400 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors"
+                            title="Send Push Notification"
+                          >
+                            <Bell className="w-4 h-4" />
+                          </button>
                           <button
                             onClick={() => openEditModal(tpl)}
                             className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
@@ -940,6 +1004,138 @@ export const TemplatesList: React.FC = () => {
                     <>
                       <Save className="w-4 h-4" />
                       <span>{editingTemplateId ? 'Save Changes' : 'Publish Template'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Push Notification Modal for Template Card */}
+      {notificationModalTemplate && (
+        <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="glass-modal rounded-2xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-7 space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-0 sm:my-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-zinc-200/50 dark:border-zinc-800/50 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
+                  <Bell className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight">
+                    Send Push Notification
+                  </h3>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    Broadcast alert to all mobile app users
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setNotificationModalTemplate(null)}
+                className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Template Card Quick Info */}
+            <div className="p-3.5 glass-card rounded-2xl flex items-center gap-3.5 border border-zinc-200/60 dark:border-zinc-800/60">
+              <div className="w-14 h-14 rounded-xl overflow-hidden bg-black shrink-0 border border-zinc-200 dark:border-zinc-800">
+                <img
+                  src={notifThumbnail || notificationModalTemplate.thumbnail}
+                  alt={notificationModalTemplate.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-zinc-900 dark:text-white truncate">
+                    {notificationModalTemplate.title}
+                  </span>
+                  {notificationModalTemplate.is_premium && (
+                    <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-amber-500/20 text-amber-500 border border-amber-500/30 shrink-0">
+                      ⭐ Premium
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  Category: <span className="font-semibold text-zinc-700 dark:text-zinc-300">{notificationModalTemplate.category || 'General'}</span>
+                  {' '}• Template ID: <span className="font-mono text-zinc-700 dark:text-zinc-300">#{notificationModalTemplate.id}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSendTemplateNotification} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                  Notification Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={notifTitle}
+                  onChange={(e) => setNotifTitle(e.target.value)}
+                  placeholder="e.g. 🔥 Trending Template Released!"
+                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                  Description / Message *
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  value={notifMessage}
+                  onChange={(e) => setNotifMessage(e.target.value)}
+                  placeholder="Describe this template to entice users to tap and use it in VN Video Editor..."
+                  className="w-full glass-input rounded-xl p-3.5 text-xs leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                  Banner Image URL (Thumbnail)
+                </label>
+                <input
+                  type="url"
+                  value={notifThumbnail}
+                  onChange={(e) => setNotifThumbnail(e.target.value)}
+                  placeholder="https://example.com/thumbnail.webp"
+                  className="w-full glass-input rounded-xl py-2 px-3.5 text-xs font-mono"
+                />
+                <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1">
+                  Prefilled from the template thumbnail to display a rich image push notification.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-200/50 dark:border-zinc-800/50">
+                <button
+                  type="button"
+                  onClick={() => setNotificationModalTemplate(null)}
+                  className="px-4 py-2.5 bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-semibold rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={sendingNotif}
+                  className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {sendingNotif ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Sending Broadcast...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Send Push Notification</span>
                     </>
                   )}
                 </button>
