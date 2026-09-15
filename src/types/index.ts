@@ -78,6 +78,7 @@ export interface AppConfig {
   admob_interstitial_id: string;
   admob_native_id: string;
   admob_app_open_id: string;
+  admob_rewarded_id: string;
   onesignal_app_id?: string;
   onesignal_rest_key?: string;
   smtp_host?: string;

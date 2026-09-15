@@ -98,6 +98,7 @@ export const AppSettings: React.FC = () => {
   const [admobInterstitialId, setAdmobInterstitialId] = useState('');
   const [admobNativeId, setAdmobNativeId] = useState('');
   const [admobAppOpenId, setAdmobAppOpenId] = useState('');
+  const [admobRewardedId, setAdmobRewardedId] = useState('');
   const [onesignalAppId, setOnesignalAppId] = useState('');
   const [onesignalRestKey, setOnesignalRestKey] = useState('');
   const [vnPackageName, setVnPackageName] = useState('com.frontrow.vlog');
@@ -154,6 +155,7 @@ export const AppSettings: React.FC = () => {
         setAdmobInterstitialId(cfg.admob_interstitial_id || '');
         setAdmobNativeId(cfg.admob_native_id || '');
         setAdmobAppOpenId(cfg.admob_app_open_id || '');
+        setAdmobRewardedId(cfg.admob_rewarded_id || '');
         setOnesignalAppId(cfg.onesignal_app_id || '');
         setOnesignalRestKey(cfg.onesignal_rest_key || '');
         setGoogleAuthEnabled(Boolean(cfg.google_auth_enabled));
@@ -253,6 +255,7 @@ export const AppSettings: React.FC = () => {
         admob_interstitial_id: admobInterstitialId,
         admob_native_id: admobNativeId,
         admob_app_open_id: admobAppOpenId,
+        admob_rewarded_id: admobRewardedId,
         onesignal_app_id: onesignalAppId,
         onesignal_rest_key: onesignalRestKey,
         smtp_host: smtpHost,
@@ -452,6 +455,19 @@ export const AppSettings: React.FC = () => {
                 value={admobAppOpenId}
                 onChange={(e) => setAdmobAppOpenId(e.target.value)}
                 placeholder="ca-app-pub-3940256099942544/9257395921"
+                className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+                AdMob Rewarded Unit ID
+              </label>
+              <input
+                type="text"
+                value={admobRewardedId}
+                onChange={(e) => setAdmobRewardedId(e.target.value)}
+                placeholder="ca-app-pub-3940256099942544/5224354917"
                 className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
               />
             </div>
