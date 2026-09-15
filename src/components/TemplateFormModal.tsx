@@ -25,6 +25,7 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
   const [formStatus, setFormStatus] = useState<'published' | 'draft'>('published');
   const [formIsFeatured, setFormIsFeatured] = useState(false);
   const [formIsPremium, setFormIsPremium] = useState(false);
+  const [formSendPush, setFormSendPush] = useState(true);
 
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
@@ -122,6 +123,9 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
       formData.append('status', formStatus);
       formData.append('is_featured', formIsFeatured ? '1' : '0');
       formData.append('is_premium', formIsPremium ? '1' : '0');
+      if (!editingTemplate) {
+        formData.append('send_push', formSendPush ? '1' : '0');
+      }
 
       const compressImage = (file: File, maxDimension = 1200): Promise<File> => {
         return new Promise((resolve) => {
@@ -277,34 +281,15 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-              VN Template ID / Intent Link *
+              VN Share Link (Decoded in QR)
             </label>
             <input
               type="text"
               value={formVnLink}
-              onChange={async (e) => {
-                const val = e.target.value;
-                setFormVnLink(val);
-                if (val.trim()) {
-                  try {
-                    const qrDataUrl = await QRCode.toDataURL(val.trim(), { width: 600, margin: 2 });
-                    setQrPreview(qrDataUrl);
-                    const blob = await (await fetch(qrDataUrl)).blob();
-                    const generatedFile = new File([blob], `qr_${Date.now()}.webp`, { type: 'image/webp' });
-                    setQrFile(generatedFile);
-                  } catch (err) {
-                    console.error('QR generation failed', err);
-                  }
-                }
-              }}
-              placeholder="e.g. 926992 or intent://template?id=926992#Intent..."
+              onChange={(e) => setFormVnLink(e.target.value)}
+              placeholder="e.g. https://vt.tiktok.com/..."
               className="w-full glass-input rounded-xl py-2.5 px-3.5 text-sm"
             />
-            {qrPreview && (
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
-                <Check className="w-3.5 h-3.5" /> Auto-generated QR image from Template ID!
-              </p>
-            )}
           </div>
 
           <div>
@@ -321,7 +306,7 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
           </div>
 
           {/* Status & Options Row with Sleek Toggle Switches */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 glass-card rounded-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 glass-card rounded-2xl">
             {/* Publish Status Toggle */}
             <div>
               <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
@@ -350,7 +335,7 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
             {/* Featured Status Toggle */}
             <div>
               <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
-                Featured Status
+                Featured
               </label>
               <div className="flex items-center gap-2.5">
                 <button
@@ -367,7 +352,7 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
                   />
                 </button>
                 <span className="text-xs font-bold text-zinc-900 dark:text-white">
-                  {formIsFeatured ? 'Featured' : 'Normal'}
+                  {formIsFeatured ? 'Yes' : 'No'}
                 </span>
               </div>
             </div>
@@ -375,7 +360,7 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
             {/* Monetization Toggle */}
             <div>
               <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
-                Monetization
+                Premium
               </label>
               <div className="flex items-center gap-2.5">
                 <button
@@ -392,10 +377,37 @@ export const TemplateFormModal: React.FC<TemplateFormModalProps> = ({
                   />
                 </button>
                 <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                  {formIsPremium ? '⭐ Premium' : 'Free Access'}
+                  {formIsPremium ? '⭐ Yes' : 'Free'}
                 </span>
               </div>
             </div>
+
+            {/* Push Notification Toggle */}
+            {!editingTemplate && (
+              <div>
+                <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+                  Push Alert
+                </label>
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setFormSendPush(!formSendPush)}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                      formSendPush ? 'bg-blue-500' : 'bg-zinc-300 dark:bg-zinc-700'
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                        formSendPush ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                    {formSendPush ? '🔔 Send' : 'Off'}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Media Upload Dropzones */}
