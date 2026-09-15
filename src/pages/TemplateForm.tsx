@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
 import { api } from '../api/axios';
 import { ArrowLeft, Upload, Video, QrCode, Image as ImageIcon, Save, Check, X } from 'lucide-react';
 import { ToastContainer, ToastMessage } from '../components/Toast';
@@ -144,7 +143,7 @@ export const TemplateForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         addToast('success', 'Template uploaded successfully');
       }
 
-      setTimeout(() => navigate('/templates'), 1000);
+      setTimeout(() => onClose(), 1000);
     } catch (err: any) {
       addToast('error', err.response?.data?.message || 'Failed to save template');
     } finally {
