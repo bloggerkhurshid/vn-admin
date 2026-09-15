@@ -74,6 +74,11 @@ export interface AppConfig {
   google_client_id?: string;
   google_client_secret?: string;
   ads_enabled: boolean;
+  banner_ad_enabled?: boolean;
+  interstitial_ad_enabled?: boolean;
+  native_ad_enabled?: boolean;
+  app_open_ad_enabled?: boolean;
+  rewarded_ad_enabled?: boolean;
   admob_banner_id: string;
   admob_interstitial_id: string;
   admob_native_id: string;

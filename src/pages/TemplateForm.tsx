@@ -16,6 +16,7 @@ export const TemplateForm: React.FC = () => {
   const [status, setStatus] = useState<'published' | 'draft'>('published');
   const [isFeatured, setIsFeatured] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
+  const [sendPush, setSendPush] = useState(true);
 
   // File uploads or preview URLs
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
@@ -120,6 +121,7 @@ export const TemplateForm: React.FC = () => {
       formData.append('status', status);
       formData.append('is_featured', isFeatured ? '1' : '0');
       formData.append('is_premium', isPremium ? '1' : '0');
+      formData.append('send_push', sendPush ? '1' : '0');
 
       if (thumbnailFile) formData.append('thumbnail', thumbnailFile);
       if (videoFile) formData.append('video_preview', videoFile);
@@ -307,6 +309,18 @@ export const TemplateForm: React.FC = () => {
                   />
                   <span>⭐ Premium Template (Requires Rewarded Ad to unlock)</span>
                 </label>
+
+                {!isEdit && (
+                  <label className="flex items-center gap-2 text-sm text-indigo-400 font-semibold cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={sendPush}
+                      onChange={(e) => setSendPush(e.target.checked)}
+                      className="w-4 h-4 rounded accent-indigo-500"
+                    />
+                    <span>🔔 Send Push Notification</span>
+                  </label>
+                )}
               </div>
             </div>
           </div>

@@ -94,6 +94,11 @@ export const AppSettings: React.FC = () => {
   const [accentColor, setAccentColor] = useState('#ffffff');
   const [backgroundMode, setBackgroundMode] = useState<'dark' | 'light'>('dark');
   const [adsEnabled, setAdsEnabled] = useState(true);
+  const [bannerAdEnabled, setBannerAdEnabled] = useState(true);
+  const [interstitialAdEnabled, setInterstitialAdEnabled] = useState(true);
+  const [nativeAdEnabled, setNativeAdEnabled] = useState(true);
+  const [appOpenAdEnabled, setAppOpenAdEnabled] = useState(true);
+  const [rewardedAdEnabled, setRewardedAdEnabled] = useState(true);
   const [admobBannerId, setAdmobBannerId] = useState('');
   const [admobInterstitialId, setAdmobInterstitialId] = useState('');
   const [admobNativeId, setAdmobNativeId] = useState('');
@@ -149,6 +154,11 @@ export const AppSettings: React.FC = () => {
         setAccentColor(cfg.accent_color);
         setBackgroundMode((cfg.background_mode as any) || 'dark');
         setAdsEnabled(Boolean(cfg.ads_enabled));
+        setBannerAdEnabled(cfg.banner_ad_enabled !== false);
+        setInterstitialAdEnabled(cfg.interstitial_ad_enabled !== false);
+        setNativeAdEnabled(cfg.native_ad_enabled !== false);
+        setAppOpenAdEnabled(cfg.app_open_ad_enabled !== false);
+        setRewardedAdEnabled(cfg.rewarded_ad_enabled !== false);
         setAdmobBannerId(cfg.admob_banner_id || '');
         setAdmobInterstitialId(cfg.admob_interstitial_id || '');
         setAdmobNativeId(cfg.admob_native_id || '');
@@ -245,6 +255,11 @@ export const AppSettings: React.FC = () => {
         background_mode: backgroundMode,
         google_auth_enabled: googleAuthEnabled ? 1 : 0,
         ads_enabled: adsEnabled ? 1 : 0,
+        banner_ad_enabled: bannerAdEnabled ? 1 : 0,
+        interstitial_ad_enabled: interstitialAdEnabled ? 1 : 0,
+        native_ad_enabled: nativeAdEnabled ? 1 : 0,
+        app_open_ad_enabled: appOpenAdEnabled ? 1 : 0,
+        rewarded_ad_enabled: rewardedAdEnabled ? 1 : 0,
         admob_banner_id: admobBannerId,
         admob_interstitial_id: admobInterstitialId,
         admob_native_id: admobNativeId,
@@ -402,9 +417,20 @@ export const AppSettings: React.FC = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                AdMob Banner Unit ID
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
+                  AdMob Banner Unit ID
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={bannerAdEnabled}
+                    onChange={(e) => setBannerAdEnabled(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded accent-indigo-600"
+                  />
+                  <span className="text-[10px] uppercase font-bold text-zinc-500">Enable</span>
+                </label>
+              </div>
               <input
                 type="text"
                 value={admobBannerId}
@@ -415,9 +441,20 @@ export const AppSettings: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                AdMob Interstitial Unit ID
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
+                  AdMob Interstitial Unit ID
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={interstitialAdEnabled}
+                    onChange={(e) => setInterstitialAdEnabled(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded accent-indigo-600"
+                  />
+                  <span className="text-[10px] uppercase font-bold text-zinc-500">Enable</span>
+                </label>
+              </div>
               <input
                 type="text"
                 value={admobInterstitialId}
@@ -428,9 +465,20 @@ export const AppSettings: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                AdMob Native Unit ID
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
+                  AdMob Native Unit ID
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={nativeAdEnabled}
+                    onChange={(e) => setNativeAdEnabled(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded accent-indigo-600"
+                  />
+                  <span className="text-[10px] uppercase font-bold text-zinc-500">Enable</span>
+                </label>
+              </div>
               <input
                 type="text"
                 value={admobNativeId}
@@ -441,9 +489,20 @@ export const AppSettings: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                AdMob App Open Unit ID
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
+                  AdMob App Open Unit ID
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={appOpenAdEnabled}
+                    onChange={(e) => setAppOpenAdEnabled(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded accent-indigo-600"
+                  />
+                  <span className="text-[10px] uppercase font-bold text-zinc-500">Enable</span>
+                </label>
+              </div>
               <input
                 type="text"
                 value={admobAppOpenId}
@@ -454,9 +513,20 @@ export const AppSettings: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                AdMob Rewarded Unit ID
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider">
+                  AdMob Rewarded Unit ID
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rewardedAdEnabled}
+                    onChange={(e) => setRewardedAdEnabled(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded accent-indigo-600"
+                  />
+                  <span className="text-[10px] uppercase font-bold text-zinc-500">Enable</span>
+                </label>
+              </div>
               <input
                 type="text"
                 value={admobRewardedId}
