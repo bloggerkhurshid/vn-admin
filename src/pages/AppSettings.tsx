@@ -107,9 +107,7 @@ export const AppSettings: React.FC = () => {
 
   // Google Auth States
   const [googleAuthEnabled, setGoogleAuthEnabled] = useState(true);
-  const [googleClientId, setGoogleClientId] = useState('');
-  const [googleClientSecret, setGoogleClientSecret] = useState('');
-  const [showGoogleSecret, setShowGoogleSecret] = useState(false);
+  const [showSmtpPass, setShowSmtpPass] = useState(false);
 
   // SMTP Email States
   const [smtpHost, setSmtpHost] = useState('');
@@ -159,8 +157,6 @@ export const AppSettings: React.FC = () => {
         setOnesignalAppId(cfg.onesignal_app_id || '');
         setOnesignalRestKey(cfg.onesignal_rest_key || '');
         setGoogleAuthEnabled(Boolean(cfg.google_auth_enabled));
-        setGoogleClientId(cfg.google_client_id || '');
-        setGoogleClientSecret(cfg.google_client_secret || '');
         setSmtpHost(cfg.smtp_host || '');
         setSmtpPort(Number(cfg.smtp_port) || 587);
         setSmtpUser(cfg.smtp_user || '');
@@ -248,8 +244,6 @@ export const AppSettings: React.FC = () => {
         accent_color: accentColor,
         background_mode: backgroundMode,
         google_auth_enabled: googleAuthEnabled ? 1 : 0,
-        google_client_id: googleClientId,
-        google_client_secret: googleClientSecret,
         ads_enabled: adsEnabled ? 1 : 0,
         admob_banner_id: admobBannerId,
         admob_interstitial_id: admobInterstitialId,
@@ -691,53 +685,10 @@ export const AppSettings: React.FC = () => {
               </label>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                  Google Client ID (OAuth 2.0 Web / Android)
-                </label>
-                <input
-                  type="text"
-                  value={googleClientId}
-                  onChange={(e) => setGoogleClientId(e.target.value)}
-                  placeholder="e.g. 1234567890-abcdef.apps.googleusercontent.com"
-                  className="w-full glass-input rounded-xl py-2.5 px-3.5 text-xs font-mono"
-                />
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">
-                  OAuth 2.0 Client ID generated from Google Cloud Console Credentials.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
-                  Google Client Secret (App Secret)
-                </label>
-                <div className="relative">
-                  <input
-                    type={showGoogleSecret ? 'text' : 'password'}
-                    value={googleClientSecret}
-                    onChange={(e) => setGoogleClientSecret(e.target.value)}
-                    placeholder="e.g. GOCSPX-xxxxxxxxxxxxxxxxxxxxxxxx"
-                    className="w-full glass-input rounded-xl py-2.5 px-3.5 pr-10 text-xs font-mono"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowGoogleSecret(!showGoogleSecret)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
-                  >
-                    {showGoogleSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">
-                  OAuth 2.0 Client Secret / App Secret used to verify server authorization tokens.
-                </p>
-              </div>
-
-              <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-800/30 rounded-2xl">
-                <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
-                  💡 When Google Authentication is enabled with Client ID &amp; App Secret, the app will verify authentication tokens and automatically register or sign in users with their Google credentials.
-                </p>
-              </div>
+            <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-800/30 rounded-2xl">
+              <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium">
+                💡 When Firebase Google Authentication is enabled, the app will automatically register or sign in users using their Firebase Google credentials.
+              </p>
             </div>
           </div>
         )}
